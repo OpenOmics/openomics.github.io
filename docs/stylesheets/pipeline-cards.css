@@ -1,0 +1,88 @@
+/* Pipeline Cards for Static Markdown */
+
+.pipeline-card {
+    background: var(--md-code-bg-color);
+    border: 1px solid var(--md-default-fg-color--lightest);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.pipeline-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.pipeline-card h3 {
+    margin-top: 0 !important;
+    margin-bottom: 0.75rem !important;
+    color: var(--md-primary-fg-color);
+}
+
+.pipeline-card h3 a {
+    text-decoration: none;
+    color: var(--md-primary-fg-color);
+}
+
+.pipeline-card h3 a:hover {
+    text-decoration: underline;
+}
+
+.pipeline-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    font-size: 0.9rem;
+    color: var(--md-default-fg-color--light);
+    margin: 0.75rem 0;
+}
+
+.pipeline-meta span {
+    display: inline-block;
+}
+
+.pipeline-info {
+    font-size: 0.85rem;
+    color: var(--md-default-fg-color--light);
+    margin: 0.75rem 0;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--md-default-fg-color--lightest);
+}
+
+.pipeline-card code {
+    background: var(--md-primary-fg-color--light);
+    color: var(--md-primary-bg-color);
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    font-size: 0.85em;
+}
+
+.pipeline-card .md-button {
+    margin-top: 1rem;
+}
+
+/* Grid layout for desktop */
+@media (min-width: 76.25em) {
+    .md-content__inner {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+    }
+    
+    .md-content__inner > h1,
+    .md-content__inner > .admonition,
+    .md-content__inner > hr,
+    .md-content__inner > h2,
+    .md-content__inner > p:last-of-type {
+        grid-column: 1 / -1;
+    }
+}
+
+/* Responsive */
+@media (max-width: 76.24em) {
+    .pipeline-meta {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}
