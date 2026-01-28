@@ -86,7 +86,7 @@ python -m zensical serve
 ## Project Structure
 
 ```
-OO_homepage/
+root
 ├── config.yml                          # Legacy config
 ├── zensical.toml                       # Zensical configuration
 ├── requirements.txt                    # Python dependencies
@@ -94,21 +94,18 @@ OO_homepage/
 │
 ├── scripts/
 │   ├── build_projects.py              # Fetches GitHub data & generates JSON
-│   └── generate-repos.py              # (Deprecated)
 │
 ├── docs/                              # Source content
 │   ├── index.md                       # Homepage
 │   ├── about.md                       # About page
 │   ├── projects.md                    # Pipelines page (auto-generated)
-│   ├── pipelines-data.json           # Pipeline data (auto-generated)
+│   ├── pipelines-data.json            # Pipeline data (auto-generated)
 │   │
 │   ├── javascripts/
-│   │   ├── load-pipelines.js         # Client-side rendering
-│   │   └── github-repos.js           # (Legacy)
+│   │   ├── load-pipelines.js          # Client-side rendering
 │   │
 │   └── stylesheets/
-│       ├── pipeline-cards.css        # Pipeline card styles
-│       └── github-repos.css          # (Legacy)
+│       ├── pipeline-cards.css         # Pipeline card styles
 │
 └── site/                              # Built site (generated)
     ├── index.html
@@ -298,23 +295,6 @@ Extend `load-pipelines.js` to add interactive controls:
 - Verify virtual environment is activated
 - Check for syntax errors in Python scripts
 
-## Contributing
-
-Contributions are welcome! To contribute:
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test locally with `make build && make serve`
-5. Submit a pull request
-
 ## License
 
 Copyright © 2026 OpenOmics Community - Open Source Bioinformatics
-
-## Related Documentation
-
-- [REFACTORING_SUMMARY.md](REFACTORING_SUMMARY.md) - Detailed refactoring notes
-- [Zensical Documentation](https://zensical.org/)
-- [GitHub API Documentation](https://docs.github.com/en/rest)
-- [Snakemake Documentation](https://snakemake.readthedocs.io/)
