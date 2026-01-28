@@ -1,0 +1,583 @@
+{
+  "generated_at": "2026-01-27T13:24:30.400596",
+  "count": 37,
+  "pipelines": [
+    {
+      "name": "leafworker",
+      "description": "An awesome alternative-splicing pipeline that runs leafcutter and IsoformSwitchAnalyzeR.",
+      "url": "https://github.com/OpenOmics/leafworker",
+      "language": "Python",
+      "stars": 1,
+      "forks": 0,
+      "topics": [],
+      "updated_at": "2026-01-27T18:08:04Z",
+      "snakefile_location": "workflow/Snakefile"
+    },
+    {
+      "name": "RNA-seek",
+      "description": "A comprehensive quality-control and quantification RNA-seq pipeline",
+      "url": "https://github.com/OpenOmics/RNA-seek",
+      "language": "Python",
+      "stars": 5,
+      "forks": 3,
+      "topics": [],
+      "updated_at": "2026-01-21T21:22:26Z",
+      "snakefile_location": "workflow/Snakefile"
+    },
+    {
+      "name": "modr",
+      "description": "An awesome Oxford Nanopore Pipeline for direct RNA-sequencing",
+      "url": "https://github.com/OpenOmics/modr",
+      "language": "Python",
+      "stars": 6,
+      "forks": 1,
+      "topics": [
+        "alternative-splicing-analysis",
+        "bioinformatics",
+        "differential-expression-analysis",
+        "direct-rna-sequencing",
+        "known-transcripts",
+        "novel-transcripts",
+        "oxford-nanopore",
+        "pipeline",
+        "polya-tail-length-estimation",
+        "quality-control",
+        "rna-editing",
+        "rna-modifications",
+        "singularity",
+        "snakemake-pipeline",
+        "transcriptomics"
+      ],
+      "updated_at": "2026-01-17T14:49:27Z",
+      "snakefile_location": "workflow/Snakefile"
+    },
+    {
+      "name": "iso-seek",
+      "description": "An awesome pipeline for processing bulk PacBio transcriptomics data generated with ISO-seq and MAS-seq.",
+      "url": "https://github.com/OpenOmics/iso-seek",
+      "language": "Python",
+      "stars": 0,
+      "forks": 0,
+      "topics": [
+        "iso-seq",
+        "long-read-sequencing",
+        "mas-seq",
+        "pacbio-sequencing",
+        "singularity",
+        "snakemake"
+      ],
+      "updated_at": "2026-01-16T18:04:53Z",
+      "snakefile_location": "workflow/Snakefile"
+    },
+    {
+      "name": "chrom-seek",
+      "description": "An awesome set of epigenetic pipelines for bulk cfChip-seq, ChIP-seq, and ATAC-seq",
+      "url": "https://github.com/OpenOmics/chrom-seek",
+      "language": "Python",
+      "stars": 5,
+      "forks": 3,
+      "topics": [
+        "annotation",
+        "atac-seq",
+        "bulk",
+        "cell-free-dna",
+        "chip-seq",
+        "differential-accessibility",
+        "differential-binding",
+        "peak-calling",
+        "quality-control"
+      ],
+      "updated_at": "2026-01-15T19:40:08Z",
+      "snakefile_location": "workflow/Snakefile"
+    },
+    {
+      "name": "cell-seek",
+      "description": "One single-cell pipeline to rule them all, one pipeline to find them, one pipeline to unify them all, and with the data bind them.",
+      "url": "https://github.com/OpenOmics/cell-seek",
+      "language": "Python",
+      "stars": 2,
+      "forks": 1,
+      "topics": [
+        "10xgenomics",
+        "single-cell-atac-seq",
+        "single-cell-cite-seq",
+        "single-cell-omics",
+        "single-cell-rna-seq",
+        "single-cell-vdj"
+      ],
+      "updated_at": "2026-01-08T23:38:26Z",
+      "snakefile_location": "workflow/Snakefile"
+    },
+    {
+      "name": "genome-seek",
+      "description": "Clinical Whole Genome and Exome Sequencing Pipeline",
+      "url": "https://github.com/OpenOmics/genome-seek",
+      "language": "Python",
+      "stars": 29,
+      "forks": 12,
+      "topics": [
+        "copy-number-variation",
+        "germline-variants",
+        "hla-typing",
+        "pipeline",
+        "quality-control",
+        "singularity",
+        "snakemake",
+        "somatic-variants",
+        "structural-variants",
+        "variant-annotation",
+        "variant-effect-prediction",
+        "whole-exome-sequencing",
+        "whole-genome-sequencing"
+      ],
+      "updated_at": "2025-12-25T11:41:05Z",
+      "snakefile_location": "workflow/Snakefile"
+    },
+    {
+      "name": "fragmentomics",
+      "description": "A pipeline analyzing fragmentomics profile of cfDNA sequencing data",
+      "url": "https://github.com/OpenOmics/fragmentomics",
+      "language": "Python",
+      "stars": 0,
+      "forks": 0,
+      "topics": [],
+      "updated_at": "2025-12-19T15:56:10Z",
+      "snakefile_location": "workflow/Snakefile"
+    },
+    {
+      "name": "NHLBI-1084",
+      "description": "NHLBI-1084",
+      "url": "https://github.com/OpenOmics/NHLBI-1084",
+      "language": "Python",
+      "stars": 0,
+      "forks": 0,
+      "topics": [],
+      "updated_at": "2025-12-16T14:53:15Z",
+      "snakefile_location": "workflow/Snakefile"
+    },
+    {
+      "name": "mir-seek",
+      "description": "An awesome microRNA-sequencing pipeline",
+      "url": "https://github.com/OpenOmics/mir-seek",
+      "language": "Python",
+      "stars": 2,
+      "forks": 1,
+      "topics": [
+        "mature-mirna",
+        "micro-rna",
+        "micro-rna-expression",
+        "mirdeep2",
+        "mirna",
+        "mirna-seq",
+        "singularity",
+        "snakemake"
+      ],
+      "updated_at": "2025-12-15T15:19:43Z",
+      "snakefile_location": "workflow/Snakefile"
+    },
+    {
+      "name": "metavirs",
+      "description": "Viral Metagenomics Assembly and Annotation Pipeline",
+      "url": "https://github.com/OpenOmics/metavirs",
+      "language": "Python",
+      "stars": 6,
+      "forks": 1,
+      "topics": [
+        "annotation",
+        "assembly",
+        "classification",
+        "pathogen-surveillance",
+        "pipeline",
+        "quality-control",
+        "singularity",
+        "snakemake",
+        "viral-metagenomics"
+      ],
+      "updated_at": "2025-12-02T11:50:58Z",
+      "snakefile_location": "workflow/Snakefile"
+    },
+    {
+      "name": "nanite",
+      "description": "A streamlined Oxford Nanopore Viral Metagenomics Pipeline ",
+      "url": "https://github.com/OpenOmics/nanite",
+      "language": "Python",
+      "stars": 6,
+      "forks": 2,
+      "topics": [
+        "annotation",
+        "assembly",
+        "classification",
+        "pathogen-surveillance",
+        "pipeline",
+        "singularity",
+        "slim",
+        "snakemake",
+        "viral-metagenomics"
+      ],
+      "updated_at": "2025-12-02T11:47:27Z",
+      "snakefile_location": "workflow/Snakefile"
+    },
+    {
+      "name": "methyl-seek",
+      "description": "Bisulphite-sequencing DNA methylation pipeline",
+      "url": "https://github.com/OpenOmics/methyl-seek",
+      "language": "Python",
+      "stars": 7,
+      "forks": 3,
+      "topics": [],
+      "updated_at": "2025-09-15T15:49:49Z",
+      "snakefile_location": "workflow/Snakefile"
+    },
+    {
+      "name": "metamorph",
+      "description": "Metagenomics and Metatranscriptomics pipeline",
+      "url": "https://github.com/OpenOmics/metamorph",
+      "language": "Python",
+      "stars": 5,
+      "forks": 2,
+      "topics": [
+        "metagenomics",
+        "metatranscriptomics",
+        "pipeline",
+        "quality-control",
+        "snakemake"
+      ],
+      "updated_at": "2025-09-10T17:05:15Z",
+      "snakefile_location": "workflow/Snakefile"
+    },
+    {
+      "name": "space-seek",
+      "description": "Spatial-sequencing: The final frontier. These are the voyages of the 10x Visium pipeline, space-seek.",
+      "url": "https://github.com/OpenOmics/space-seek",
+      "language": "Python",
+      "stars": 1,
+      "forks": 0,
+      "topics": [
+        "10xgenomics",
+        "pipeline",
+        "single-cell",
+        "singularity",
+        "snakemake",
+        "visium-hd"
+      ],
+      "updated_at": "2025-09-04T21:02:11Z",
+      "snakefile_location": "workflow/Snakefile"
+    },
+    {
+      "name": "parabricks-benchmark",
+      "description": "Benchmarking parabricks GPU-accelerated tools for GATK and beyond!",
+      "url": "https://github.com/OpenOmics/parabricks-benchmark",
+      "language": "Python",
+      "stars": 2,
+      "forks": 0,
+      "topics": [],
+      "updated_at": "2025-08-12T01:07:22Z",
+      "snakefile_location": "workflow/Snakefile"
+    },
+    {
+      "name": "ervx",
+      "description": "Endogenous Retrovirus Expression Pipeline for Human, Mouse, and Macaque for use with bulk RNA-seq",
+      "url": "https://github.com/OpenOmics/ervx",
+      "language": "Python",
+      "stars": 1,
+      "forks": 1,
+      "topics": [
+        "endogenous-retrovirus-expression",
+        "herv",
+        "human",
+        "mouse",
+        "pipeline",
+        "quality-control",
+        "singularity",
+        "snakemake",
+        "transposable-elements",
+        "workflow"
+      ],
+      "updated_at": "2025-07-17T14:20:14Z",
+      "snakefile_location": "workflow/Snakefile"
+    },
+    {
+      "name": "baseline",
+      "description": "A BASE template for building pipeLINEs",
+      "url": "https://github.com/OpenOmics/baseline",
+      "language": "Python",
+      "stars": 3,
+      "forks": 1,
+      "topics": [
+        "pipeline-template",
+        "snakemake"
+      ],
+      "updated_at": "2025-07-11T16:54:16Z",
+      "snakefile_location": "workflow/Snakefile"
+    },
+    {
+      "name": "mpox-seek",
+      "description": "A rapid pipeline for targeted and whole-genome ONT monkeypox sequencing",
+      "url": "https://github.com/OpenOmics/mpox-seek",
+      "language": "Python",
+      "stars": 1,
+      "forks": 0,
+      "topics": [
+        "conda",
+        "mamba",
+        "monkeypox",
+        "mpox",
+        "oxford-nanopore",
+        "phylogenetics",
+        "pipeline",
+        "rapid",
+        "singularity",
+        "snakemake"
+      ],
+      "updated_at": "2025-05-02T20:57:27Z",
+      "snakefile_location": "workflow/Snakefile"
+    },
+    {
+      "name": "mr-seek",
+      "description": "Mendelian Randomization pipeline",
+      "url": "https://github.com/OpenOmics/mr-seek",
+      "language": "Python",
+      "stars": 2,
+      "forks": 1,
+      "topics": [
+        "mendelian-randomization",
+        "pipeline",
+        "snakemake"
+      ],
+      "updated_at": "2025-03-27T15:55:59Z",
+      "snakefile_location": "workflow/Snakefile"
+    },
+    {
+      "name": "scErvx",
+      "description": "Endogenous Retrovirus Expression Pipeline for Human and Mouse for use with data from 10x genomics (bam files)",
+      "url": "https://github.com/OpenOmics/scErvx",
+      "language": "Python",
+      "stars": 1,
+      "forks": 0,
+      "topics": [
+        "endogenous-retrovirus-expression",
+        "single-cell-rna-seq"
+      ],
+      "updated_at": "2025-03-17T15:40:50Z",
+      "snakefile_location": "workflow/Snakefile"
+    },
+    {
+      "name": "pbAmp-seek",
+      "description": "Identify and count PacBio Hifi amplicons",
+      "url": "https://github.com/OpenOmics/pbAmp-seek",
+      "language": "Python",
+      "stars": 1,
+      "forks": 2,
+      "topics": [],
+      "updated_at": "2025-03-17T15:40:49Z",
+      "snakefile_location": "workflow/Snakefile"
+    },
+    {
+      "name": "istari",
+      "description": "Perform error-prone data preparation for whole genome regression modeling",
+      "url": "https://github.com/OpenOmics/istari",
+      "language": "Python",
+      "stars": 1,
+      "forks": 1,
+      "topics": [],
+      "updated_at": "2025-03-17T15:40:22Z",
+      "snakefile_location": "workflow/Snakefile"
+    },
+    {
+      "name": "cyte-seek",
+      "description": "Awesome single-cell CITE-sequencing Pipeline",
+      "url": "https://github.com/OpenOmics/cyte-seek",
+      "language": "Python",
+      "stars": 2,
+      "forks": 0,
+      "topics": [
+        "10xgenomics",
+        "cite-seq",
+        "pipeline",
+        "quality-control",
+        "single-cell",
+        "singularity"
+      ],
+      "updated_at": "2025-03-17T15:40:21Z",
+      "snakefile_location": "workflow/Snakefile"
+    },
+    {
+      "name": "HiIP",
+      "description": "An awesome Hi-C + ChIP (HiChIP) sequencing pipeline.",
+      "url": "https://github.com/OpenOmics/HiIP",
+      "language": "Python",
+      "stars": 0,
+      "forks": 0,
+      "topics": [
+        "chip-seq",
+        "hi-c",
+        "hichip",
+        "pipeline",
+        "singularity",
+        "snakemake"
+      ],
+      "updated_at": "2025-03-17T15:40:17Z",
+      "snakefile_location": "workflow/Snakefile"
+    },
+    {
+      "name": "assembly-seek",
+      "description": "De novo Long-read Genome Assembly Pipeline",
+      "url": "https://github.com/OpenOmics/assembly-seek",
+      "language": "Python",
+      "stars": 2,
+      "forks": 2,
+      "topics": [],
+      "updated_at": "2025-03-17T15:40:17Z",
+      "snakefile_location": "workflow/Snakefile"
+    },
+    {
+      "name": "weave",
+      "description": "An awesome BCL demultiplexing and FastQ quality-control pipeline",
+      "url": "https://github.com/OpenOmics/weave",
+      "language": "Python",
+      "stars": 1,
+      "forks": 0,
+      "topics": [
+        "bcl2fastq",
+        "bclconvert",
+        "contamination-screening",
+        "disambiguate-genomes",
+        "fastp",
+        "fastq-quality-control",
+        "kaiju",
+        "kraken2",
+        "krona"
+      ],
+      "updated_at": "2025-03-10T18:10:34Z",
+      "snakefile_location": "workflow/Snakefile"
+    },
+    {
+      "name": "SnakeMaker",
+      "description": "A repository for the Maker Snakemake pipeline",
+      "url": "https://github.com/OpenOmics/SnakeMaker",
+      "language": "Python",
+      "stars": 0,
+      "forks": 1,
+      "topics": [],
+      "updated_at": "2025-02-18T14:01:42Z",
+      "snakefile_location": "Snakefile"
+    },
+    {
+      "name": "SnakeMaker_alt",
+      "description": "A repository for the Maker Snakemake pipeline",
+      "url": "https://github.com/OpenOmics/SnakeMaker_alt",
+      "language": "Python",
+      "stars": 0,
+      "forks": 0,
+      "topics": [],
+      "updated_at": "2025-01-24T13:20:04Z",
+      "snakefile_location": "Snakefile"
+    },
+    {
+      "name": "brakerMake",
+      "description": "Snakemake pipeline for annotating with braker and adding functional information",
+      "url": "https://github.com/OpenOmics/brakerMake",
+      "language": "Python",
+      "stars": 1,
+      "forks": 0,
+      "topics": [],
+      "updated_at": "2024-12-06T15:51:44Z",
+      "snakefile_location": "Snakefile"
+    },
+    {
+      "name": "mutation-seek",
+      "description": "An awesome quantitative genetics pipeline",
+      "url": "https://github.com/OpenOmics/mutation-seek",
+      "language": "Python",
+      "stars": 0,
+      "forks": 0,
+      "topics": [],
+      "updated_at": "2024-09-19T15:55:14Z",
+      "snakefile_location": "workflow/Snakefile"
+    },
+    {
+      "name": "cfChIP-seek",
+      "description": "cell-free ChIP-seq pipeline",
+      "url": "https://github.com/OpenOmics/cfChIP-seek",
+      "language": "Python",
+      "stars": 3,
+      "forks": 3,
+      "topics": [
+        "cell-free-dna",
+        "cell-type-deconvolution",
+        "chip-seq",
+        "peak-annotation",
+        "peak-calling",
+        "quality-control",
+        "snakemake"
+      ],
+      "updated_at": "2024-02-07T16:15:31Z",
+      "snakefile_location": "workflow/Snakefile"
+    },
+    {
+      "name": "DeepSeq",
+      "description": "Ultra Deep Amplicon Sequencing Analysis of NPM1 gene",
+      "url": "https://github.com/OpenOmics/DeepSeq",
+      "language": "Python",
+      "stars": 0,
+      "forks": 0,
+      "topics": [
+        "amplicon",
+        "bioinformatics",
+        "npm1"
+      ],
+      "updated_at": "2023-02-16T14:31:11Z",
+      "snakefile_location": "Snakefile"
+    },
+    {
+      "name": "ATAC-seq",
+      "description": null,
+      "url": "https://github.com/OpenOmics/ATAC-seq",
+      "language": "Python",
+      "stars": 0,
+      "forks": 1,
+      "topics": [],
+      "updated_at": "2022-11-04T16:15:17Z",
+      "snakefile_location": "Snakefile"
+    },
+    {
+      "name": "DLscID",
+      "description": "Deep Learning single-cell Identification and Annotation",
+      "url": "https://github.com/OpenOmics/DLscID",
+      "language": "Python",
+      "stars": 0,
+      "forks": 0,
+      "topics": [
+        "cell-type-identification",
+        "deep-learning",
+        "single-cell-rna-seq",
+        "singularity",
+        "snakemake"
+      ],
+      "updated_at": "2022-10-18T18:58:39Z",
+      "snakefile_location": "workflow/Snakefile"
+    },
+    {
+      "name": "SQANTImake",
+      "description": "Pipeline to generate custom SQANTI GTF & modify it for use in RNA-seek",
+      "url": "https://github.com/OpenOmics/SQANTImake",
+      "language": null,
+      "stars": 0,
+      "forks": 0,
+      "topics": [],
+      "updated_at": "2022-05-03T13:50:47Z",
+      "snakefile_location": "Snakefile"
+    },
+    {
+      "name": "Long-read-genome-assembly",
+      "description": "PacBio data",
+      "url": "https://github.com/OpenOmics/Long-read-genome-assembly",
+      "language": null,
+      "stars": 0,
+      "forks": 0,
+      "topics": [],
+      "updated_at": "2021-08-26T13:58:32Z",
+      "snakefile_location": "Snakefile"
+    }
+  ]
+}

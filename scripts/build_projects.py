@@ -2,13 +2,48 @@
 """
 Build-time script to generate the projects page with OpenOmics Snakemake pipelines.
 This is automatically run during the Zensical build process.
+
+Requires GITHUB_TOKEN environment variable to be set.
 """
 
 import sys
 import os
+import json
 import requests
 from datetime import datetime
 import time
+
+
+def get_github_token():
+    """Get GitHub token from environment variable or exit with error."""
+    token = os.environ.get('GITHUB_TOKEN')
+    if not token:
+        print("\n" + "=" * 70, file=sys.stderr)
+        print("❌ ERROR: GitHub token not found!", file=sys.stderr)
+        print("=" * 70, file=sys.stderr)
+        print("\nThis script requires a GitHub Personal Access Token to avoid", file=sys.stderr)
+        print("API rate limiting and ensure reliable data fetching.", file=sys.stderr)
+        print("\nTo fix this:", file=sys.stderr)
+        print("\n1. Create a GitHub Personal Access Token:", file=sys.stderr)
+        print("   https://github.com/settings/tokens/new", file=sys.stderr)
+        print("\n2. Set the GITHUB_TOKEN environment variable:", file=sys.stderr)
+        print("   export GITHUB_TOKEN='your_token_here'", file=sys.stderr)
+        print("\n3. Run the script again", file=sys.stderr)
+        print("\nFor public repositories, you only need the 'public_repo' scope.", file=sys.stderr)
+        print("=" * 70 + "\n", file=sys.stderr)
+        sys.exit(1)
+    
+    return token
+
+
+def get_headers():
+    """Get headers for GitHub API requests with authentication."""
+    token = get_github_token()
+    return {
+        'Authorization': f'token {token}',
+        'Accept': 'application/vnd.github.v3+json',
+        'User-Agent': 'OpenOmics-Website-Builder'
+    }
 
 
 def has_snakefile(org_name, repo_name):
@@ -24,10 +59,12 @@ def has_snakefile(org_name, repo_name):
         'snakemake/snakefile'
     ]
     
+    headers = get_headers()
+    
     for location in common_locations:
         url = f"https://api.github.com/repos/{org_name}/{repo_name}/contents/{location}"
         try:
-            response = requests.get(url)
+            response = requests.get(url, headers=headers)
             if response.status_code == 200:
                 return True, location
             # Small delay to avoid rate limiting
@@ -41,6 +78,7 @@ def has_snakefile(org_name, repo_name):
 def fetch_repos(org_name):
     """Fetch all public repositories from GitHub organization."""
     url = f"https://api.github.com/orgs/{org_name}/repos"
+    headers = get_headers()
     all_repos = []
     page = 1
     per_page = 100
@@ -54,8 +92,14 @@ def fetch_repos(org_name):
         }
         
         try:
-            response = requests.get(url, params=params)
+            response = requests.get(url, params=params, headers=headers)
             response.raise_for_status()
+            
+            # Check rate limit
+            remaining = response.headers.get('X-RateLimit-Remaining')
+            if remaining:
+                print(f"  API Rate Limit Remaining: {remaining}")
+            
             repos = response.json()
             
             if not repos:
@@ -71,6 +115,11 @@ def fetch_repos(org_name):
             
         except requests.RequestException as e:
             print(f"Error fetching repos: {e}", file=sys.stderr)
+            # Check if it's an auth error
+            if hasattr(e, 'response') and e.response is not None:
+                if e.response.status_code == 401:
+                    print("\n❌ Authentication failed! Check your GITHUB_TOKEN.", file=sys.stderr)
+                    sys.exit(1)
             break
     
     return all_repos
@@ -174,10 +223,13 @@ Explore our collection of **{len(pipelines)} Snakemake workflow{'s' if len(pipel
 
 ## Available Pipelines
 
+<div id="pipelines-container">
+<!-- Pipelines will be loaded from pipelines-data.json -->
+</div>
+
+<script src="../javascripts/load-pipelines.js"></script>
+
 """
-    
-    # Generate cards for each pipeline
-    pipeline_cards = [generate_repo_card_markdown(repo) for repo in pipelines]
     
     footer = f"""
 ---
@@ -223,11 +275,46 @@ We welcome contributions to all our pipelines! Each repository has contribution 
 <small>*To regenerate this page, run: `python scripts/build_projects.py`*</small>
 """
     
-    return header + '\n'.join(pipeline_cards) + footer
+    return header + footer
+
+
+def save_pipelines_data(pipelines, output_dir="docs"):
+    """Save pipeline data to JSON file for client-side rendering."""
+    data = {
+        "generated_at": datetime.now().isoformat(),
+        "count": len(pipelines),
+        "pipelines": []
+    }
+    
+    for repo in pipelines:
+        pipeline_data = {
+            "name": repo.get('name', 'Unknown'),
+            "description": repo.get('description', 'Snakemake pipeline'),
+            "url": repo.get('html_url', '#'),
+            "language": repo.get('language', 'Python'),
+            "stars": repo.get('stargazers_count', 0),
+            "forks": repo.get('forks_count', 0),
+            "topics": repo.get('topics', []),
+            "updated_at": repo.get('updated_at', ''),
+            "snakefile_location": repo.get('snakefile_location', 'Snakefile')
+        }
+        data["pipelines"].append(pipeline_data)
+    
+    # Write to JSON file
+    json_file = os.path.join(output_dir, "pipelines-data.json")
+    with open(json_file, 'w', encoding='utf-8') as f:
+        json.dump(data, f, indent=2, ensure_ascii=False)
+    
+    return json_file
 
 
 def main():
     org_name = "OpenOmics"
+    
+    # Verify GitHub token is set (will exit if not found)
+    print("Checking GitHub authentication...")
+    token = get_github_token()
+    print(f"✓ GitHub token found (starts with: {token[:4]}...)\n")
     
     print(f"Fetching repositories from {org_name}...")
     all_repos = fetch_repos(org_name)
@@ -247,6 +334,11 @@ def main():
         sys.exit(1)
     
     print(f"\n✓ Found {len(snakemake_pipelines)} Snakemake pipelines")
+    
+    # Save pipeline data to JSON
+    print("\nSaving pipeline data to JSON...")
+    json_file = save_pipelines_data(snakemake_pipelines)
+    print(f"✓ Saved data to {json_file}")
     
     # Generate markdown
     print("\nGenerating projects.md...")

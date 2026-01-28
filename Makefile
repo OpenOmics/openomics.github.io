@@ -12,6 +12,17 @@ install:  ## Install Python dependencies
 	pip install -r requirements.txt
 
 generate:  ## Generate pipeline listings from GitHub
+	@if [ -z "$$GITHUB_TOKEN" ]; then \
+		echo ""; \
+		echo "❌ ERROR: GITHUB_TOKEN not set!"; \
+		echo ""; \
+		echo "Please set your GitHub Personal Access Token:"; \
+		echo "  export GITHUB_TOKEN='your_token_here'"; \
+		echo ""; \
+		echo "Create a token at: https://github.com/settings/tokens/new"; \
+		echo ""; \
+		exit 1; \
+	fi
 	python scripts/build_projects.py
 
 build: generate  ## Generate pipelines and build the static site
