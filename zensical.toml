@@ -259,12 +259,12 @@ features = [
 # ----------------------------------------------------------------------------
 [[project.theme.palette]]
 scheme = "default"
-toggle.icon = "lucide/sun"
+toggle.icon = "octicons/sun-16"
 toggle.name = "Switch to dark mode"
 
 [[project.theme.palette]]
 scheme = "slate"
-toggle.icon = "lucide/moon"
+toggle.icon = "octicons/moon-16"
 toggle.name = "Switch to light mode"
 
 # ----------------------------------------------------------------------------
@@ -292,8 +292,8 @@ toggle.name = "Switch to light mode"
 # - https://zensical.org/docs/setup/logo-and-icons
 # - https://zensical.org/docs/authoring/icons-emojis/#search
 # ----------------------------------------------------------------------------
-#[project.theme.icon]
-#logo = "lucide/smile"
+[project.theme.icon]
+logo = "images/openomics_logo.png"
 #repo = "lucide/smile"
 
 # ----------------------------------------------------------------------------
