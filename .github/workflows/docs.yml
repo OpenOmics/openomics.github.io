@@ -20,7 +20,16 @@ jobs:
         with:
           python-version: 3.x
       - run: pip install zensical
-      - run: zensical build --clean
+      - name: Build site with error checking
+        run: |
+          set -e
+          BUILD_OUTPUT=$(zensical build --clean 2>&1)
+          echo "$BUILD_OUTPUT"
+          if echo "$BUILD_OUTPUT" | grep -iq "error:"; then
+            echo "::error::Build completed with errors"
+            exit 1
+          fi
+          exit 0
       - run: touch site/.nojekyll
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v4
