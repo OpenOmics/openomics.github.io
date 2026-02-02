@@ -57,7 +57,7 @@ Copyright &copy; 2026 OpenOmics Community - Open Source Bioinformatics
 #
 # Read more: https://zensical.org/docs/customization/#additional-css
 #
-extra_css = ["stylesheets/pipeline-cards.css"]
+extra_css = ["stylesheets/ocean-theme.css", "stylesheets/pipeline-cards.css"]
 
 # With the `extra_javascript` option you can add your own JavaScript to your
 # project to customize the behavior according to your needs.
@@ -270,18 +270,26 @@ features = [
 # that the user can switch between. Each color scheme can be further
 # customized.
 #
+# Ocean Theme Configuration - Inspired by Fumadocs
+# This configuration works together with ocean-theme.css for a cohesive look
+# Dark mode is set as default (first palette entry)
+#
 # Read more:
 # - https://zensical.org/docs/setup/colors/
 # ----------------------------------------------------------------------------
 [[project.theme.palette]]
-scheme = "default"
-toggle.icon = "octicons/sun-16"
-toggle.name = "Switch to dark mode"
-
-[[project.theme.palette]]
 scheme = "slate"
+primary = "light-blue"
+accent = "cyan"
 toggle.icon = "octicons/moon-16"
 toggle.name = "Switch to light mode"
+
+[[project.theme.palette]]
+scheme = "default"
+primary = "blue"
+accent = "light-blue"
+toggle.icon = "octicons/sun-16"
+toggle.name = "Switch to dark mode"
 
 # ----------------------------------------------------------------------------
 # In the "font" subsection you can configure the fonts used. By default, fonts
