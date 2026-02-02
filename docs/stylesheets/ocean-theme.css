@@ -1,0 +1,435 @@
+/**
+ * Ocean Theme - Inspired by Fumadocs
+ * Adapted for Zensical/Material for MkDocs
+ */
+
+/* ============================================================================
+ * Light Mode Color Variables
+ * ============================================================================ */
+:root {
+  /* Ocean Theme - Light Mode Colors */
+  --ocean-background: hsl(0, 0%, 98%);
+  --ocean-foreground: hsl(0, 0%, 3.9%);
+  --ocean-muted: hsl(220, 90%, 96.1%);
+  --ocean-muted-foreground: hsl(0, 0%, 45.1%);
+  --ocean-popover: hsl(0, 0%, 98%);
+  --ocean-popover-foreground: hsl(0, 0%, 15.1%);
+  --ocean-card: hsl(220, 50%, 98%);
+  --ocean-card-foreground: hsl(0, 0%, 3.9%);
+  --ocean-border: hsl(220, 50%, 89.8%);
+  --ocean-primary: hsl(210, 80%, 20.2%);
+  --ocean-primary-foreground: hsl(0, 0%, 98%);
+  --ocean-secondary: hsl(220, 90%, 96.1%);
+  --ocean-secondary-foreground: hsl(0, 0%, 9%);
+  --ocean-accent: hsl(220, 50%, 94.1%);
+  --ocean-accent-foreground: hsl(0, 0%, 9%);
+  --ocean-ring: hsl(220, 100%, 63.9%);
+  
+  /* Map to Material for MkDocs variables - Light mode */
+  --md-default-bg-color: var(--ocean-background);
+  --md-default-fg-color: var(--ocean-foreground);
+  --md-primary-fg-color: var(--ocean-primary);
+  --md-primary-fg-color--light: hsl(210, 80%, 35%);
+  --md-primary-fg-color--dark: hsl(210, 80%, 15%);
+  --md-accent-fg-color: var(--ocean-ring);
+  --md-accent-fg-color--transparent: hsla(220, 100%, 63.9%, 0.1);
+  
+  /* Typography colors */
+  --md-typeset-color: var(--ocean-foreground);
+  --md-typeset-a-color: var(--ocean-primary);
+  --md-default-fg-color--light: var(--ocean-muted-foreground);
+  --md-default-fg-color--lighter: hsl(0, 0%, 65%);
+  --md-default-fg-color--lightest: var(--ocean-border);
+  
+  /* Code block colors */
+  --md-code-bg-color: var(--ocean-card);
+  --md-code-fg-color: var(--ocean-card-foreground);
+  
+  /* Surface colors */
+  --md-code-hl-color: var(--ocean-accent);
+  --md-code-hl-color--light: hsla(220, 50%, 94.1%, 0.5);
+  
+  /* Footer colors */
+  --md-footer-bg-color: var(--ocean-muted);
+  --md-footer-bg-color--dark: hsl(220, 90%, 92%);
+  --md-footer-fg-color: var(--ocean-foreground);
+  --md-footer-fg-color--light: var(--ocean-muted-foreground);
+  --md-footer-fg-color--lighter: hsl(0, 0%, 55%);
+}
+
+/* ============================================================================
+ * Dark Mode Color Variables
+ * ============================================================================ */
+[data-md-color-scheme="slate"] {
+  /* Ocean Theme - Dark Mode Colors */
+  --ocean-background: hsl(220, 60%, 8%);
+  --ocean-foreground: hsl(220, 60%, 94.5%);
+  --ocean-muted: hsl(220, 50%, 10%);
+  --ocean-muted-foreground: hsl(220, 30%, 65%);
+  --ocean-popover: hsl(220, 50%, 10%);
+  --ocean-popover-foreground: hsl(220, 60%, 94.5%);
+  --ocean-card: hsla(220, 56%, 15%, 0.4);
+  --ocean-card-foreground: hsl(220, 60%, 94.5%);
+  --ocean-border: hsla(220, 50%, 50%, 0.2);
+  --ocean-primary: hsl(205, 100%, 85%);
+  --ocean-primary-foreground: hsl(0, 0%, 9%);
+  --ocean-secondary: hsl(220, 50%, 20%);
+  --ocean-secondary-foreground: hsl(220, 80%, 90%);
+  --ocean-accent: hsl(220, 40%, 20%);
+  --ocean-accent-foreground: hsl(220, 80%, 90%);
+  --ocean-ring: hsl(205, 100%, 85%);
+  
+  /* Map to Material for MkDocs variables - Dark mode */
+  --md-default-bg-color: var(--ocean-background);
+  --md-default-fg-color: var(--ocean-foreground);
+  --md-primary-fg-color: var(--ocean-primary);
+  --md-primary-fg-color--light: hsl(205, 100%, 90%);
+  --md-primary-fg-color--dark: hsl(205, 100%, 75%);
+  --md-accent-fg-color: var(--ocean-ring);
+  --md-accent-fg-color--transparent: hsla(205, 100%, 85%, 0.1);
+  
+  /* Typography colors */
+  --md-typeset-color: var(--ocean-foreground);
+  --md-typeset-a-color: var(--ocean-primary);
+  --md-default-fg-color--light: var(--ocean-muted-foreground);
+  --md-default-fg-color--lighter: hsl(220, 30%, 50%);
+  --md-default-fg-color--lightest: var(--ocean-border);
+  
+  /* Code block colors */
+  --md-code-bg-color: var(--ocean-card);
+  --md-code-fg-color: var(--ocean-card-foreground);
+  
+  /* Surface colors */
+  --md-code-hl-color: var(--ocean-accent);
+  --md-code-hl-color--light: hsla(220, 40%, 20%, 0.5);
+  
+  /* Footer colors */
+  --md-footer-bg-color: hsl(220, 60%, 6%);
+  --md-footer-bg-color--dark: hsl(220, 60%, 4%);
+  --md-footer-fg-color: var(--ocean-foreground);
+  --md-footer-fg-color--light: var(--ocean-muted-foreground);
+  --md-footer-fg-color--lighter: hsl(220, 30%, 55%);
+}
+
+/* ============================================================================
+ * Dark Mode Background Gradient (Signature Ocean Effect)
+ * ============================================================================ */
+[data-md-color-scheme="slate"] body {
+  background-image: linear-gradient(
+    rgba(5, 105, 255, 0.15),
+    transparent 20rem,
+    transparent
+  );
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* ============================================================================
+ * Enhanced Card Styling
+ * ============================================================================ */
+.md-typeset .admonition,
+.md-typeset details {
+  background-color: var(--ocean-card);
+  border-color: var(--ocean-border);
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+[data-md-color-scheme="slate"] .md-typeset .admonition,
+[data-md-color-scheme="slate"] .md-typeset details {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* ============================================================================
+ * Navigation Styling
+ * ============================================================================ */
+.md-header {
+  background-color: var(--ocean-background);
+  color: var(--ocean-foreground);
+  border-bottom: 1px solid var(--ocean-border);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+[data-md-color-scheme="slate"] .md-header {
+  background-color: var(--ocean-background);
+  backdrop-filter: blur(10px);
+  background-color: hsla(220, 60%, 8%, 0.8);
+}
+
+.md-nav__link {
+  color: var(--ocean-foreground);
+}
+
+.md-nav__link:hover {
+  color: var(--ocean-primary);
+}
+
+.md-nav__link--active {
+  color: var(--ocean-primary);
+  font-weight: 600;
+}
+
+/* ============================================================================
+ * Sidebar Styling
+ * ============================================================================ */
+.md-sidebar {
+  background-color: transparent;
+}
+
+.md-sidebar__scrollwrap {
+  background-color: transparent;
+}
+
+/* ============================================================================
+ * Table of Contents Styling
+ * ============================================================================ */
+.md-nav--secondary .md-nav__link--active {
+  color: var(--ocean-primary);
+  border-left-color: var(--ocean-primary);
+}
+
+/* ============================================================================
+ * Button Styling
+ * ============================================================================ */
+.md-button {
+  background-color: var(--ocean-primary);
+  color: var(--ocean-primary-foreground);
+  border: none;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.md-button:hover {
+  background-color: var(--ocean-primary);
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.md-button--primary {
+  background-color: var(--ocean-primary);
+  color: var(--ocean-primary-foreground);
+}
+
+/* ============================================================================
+ * Code Block Styling
+ * ============================================================================ */
+.md-typeset code {
+  background-color: var(--ocean-muted);
+  color: var(--ocean-foreground);
+  border-radius: 4px;
+  padding: 0.1em 0.4em;
+}
+
+.md-typeset pre > code {
+  background-color: var(--ocean-card);
+  border: 1px solid var(--ocean-border);
+  border-radius: 8px;
+}
+
+.highlight .hll {
+  background-color: var(--ocean-accent);
+}
+
+/* ============================================================================
+ * Table Styling
+ * ============================================================================ */
+.md-typeset table:not([class]) {
+  border: 1px solid var(--ocean-border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.md-typeset table:not([class]) th {
+  background-color: var(--ocean-muted);
+  color: var(--ocean-foreground);
+  font-weight: 600;
+  border-bottom: 2px solid var(--ocean-border);
+}
+
+.md-typeset table:not([class]) td {
+  border-top: 1px solid var(--ocean-border);
+}
+
+.md-typeset table:not([class]) tr:hover {
+  background-color: var(--ocean-accent);
+}
+
+/* ============================================================================
+ * Link Styling
+ * ============================================================================ */
+.md-typeset a {
+  color: var(--ocean-primary);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.md-typeset a:hover {
+  color: var(--ocean-primary);
+  border-bottom-color: var(--ocean-primary);
+}
+
+.md-typeset a:focus {
+  outline: 2px solid var(--ocean-ring);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* ============================================================================
+ * Search Styling
+ * ============================================================================ */
+.md-search__form {
+  background-color: var(--ocean-muted);
+  border-radius: 8px;
+  border: 1px solid var(--ocean-border);
+}
+
+.md-search__input {
+  background-color: transparent;
+  color: var(--ocean-foreground);
+}
+
+.md-search__input::placeholder {
+  color: var(--ocean-muted-foreground);
+}
+
+.md-search-result__article {
+  background-color: var(--ocean-card);
+  border: 1px solid var(--ocean-border);
+  border-radius: 6px;
+}
+
+.md-search-result__article:hover {
+  background-color: var(--ocean-accent);
+}
+
+/* ============================================================================
+ * Footer Styling
+ * ============================================================================ */
+.md-footer {
+  background-color: var(--md-footer-bg-color);
+  border-top: 1px solid var(--ocean-border);
+}
+
+.md-footer-meta {
+  background-color: var(--md-footer-bg-color--dark);
+}
+
+/* ============================================================================
+ * Tabs Styling
+ * ============================================================================ */
+.md-tabs {
+  background-color: var(--ocean-primary);
+  border-bottom: 1px solid var(--ocean-border);
+}
+
+.md-tabs__link {
+  color: var(--ocean-primary-foreground);
+  opacity: 0.7;
+}
+
+.md-tabs__link--active,
+.md-tabs__link:hover {
+  opacity: 1;
+  color: var(--ocean-primary-foreground);
+}
+
+/* ============================================================================
+ * Content Area Enhancements
+ * ============================================================================ */
+.md-content {
+  background-color: transparent;
+}
+
+.md-typeset h1,
+.md-typeset h2,
+.md-typeset h3,
+.md-typeset h4,
+.md-typeset h5,
+.md-typeset h6 {
+  color: var(--ocean-foreground);
+  font-weight: 700;
+}
+
+.md-typeset h1 {
+  border-bottom: 2px solid var(--ocean-border);
+  padding-bottom: 0.3em;
+}
+
+/* ============================================================================
+ * Enhanced Focus and Interaction States
+ * ============================================================================ */
+*:focus-visible {
+  outline: 2px solid var(--ocean-ring);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* ============================================================================
+ * Scrollbar Styling (for webkit browsers)
+ * ============================================================================ */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--ocean-muted);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--ocean-border);
+  border-radius: 5px;
+  border: 2px solid var(--ocean-muted);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ocean-muted-foreground);
+}
+
+[data-md-color-scheme="slate"] ::-webkit-scrollbar-track {
+  background: var(--ocean-background);
+}
+
+[data-md-color-scheme="slate"] ::-webkit-scrollbar-thumb {
+  background: var(--ocean-border);
+  border-color: var(--ocean-background);
+}
+
+/* ============================================================================
+ * Announcement Bar
+ * ============================================================================ */
+.md-banner {
+  background-color: var(--ocean-primary);
+  color: var(--ocean-primary-foreground);
+  border-bottom: 1px solid var(--ocean-border);
+}
+
+.md-banner__inner {
+  color: var(--ocean-primary-foreground);
+}
+
+/* ============================================================================
+ * Tag/Badge Styling
+ * ============================================================================ */
+.md-typeset .md-tag {
+  background-color: var(--ocean-muted);
+  color: var(--ocean-foreground);
+  border: 1px solid var(--ocean-border);
+  border-radius: 12px;
+  font-size: 0.75em;
+}
+
+/* ============================================================================
+ * Animation and Transitions
+ * ============================================================================ */
+.md-typeset a,
+.md-nav__link,
+.md-button,
+.md-search__form,
+.pipeline-card,
+.md-typeset .admonition {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}

@@ -93,23 +93,34 @@ body:has(#pipelines-container) .md-content__inner {
 
 /* Pipeline Card */
 .pipeline-card {
-    background: var(--md-code-bg-color);
-    border: 1px solid var(--md-default-fg-color--lightest);
+    background: var(--ocean-card, var(--md-code-bg-color));
+    border: 1px solid var(--ocean-border, var(--md-default-fg-color--lightest));
     border-radius: 8px;
     padding: 1rem;
     display: flex;
     flex-direction: column;
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), 
+                box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     height: 100%;
     min-width: 0; /* Prevent overflow */
     box-sizing: border-box;
     overflow: hidden; /* Prevent content overflow */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .pipeline-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    border-color: var(--md-primary-fg-color--light);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(5, 105, 255, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-color: var(--ocean-primary, var(--md-primary-fg-color--light));
+}
+
+[data-md-color-scheme="slate"] .pipeline-card {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+[data-md-color-scheme="slate"] .pipeline-card:hover {
+    box-shadow: 0 6px 20px rgba(5, 105, 255, 0.25), 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
 /* Header */
@@ -128,20 +139,24 @@ body:has(#pipelines-container) .md-content__inner {
 
 .pipeline-card h4 a {
     text-decoration: none;
-    color: var(--md-primary-fg-color);
+    color: var(--ocean-primary, var(--md-primary-fg-color));
     word-wrap: break-word;
     overflow-wrap: break-word;
+    font-weight: 600;
+    transition: color 0.2s ease;
 }
 
 .pipeline-card h4 a:hover {
-    text-decoration: underline;
+    color: var(--ocean-primary, var(--md-primary-fg-color));
+    text-decoration: none;
+    opacity: 0.85;
 }
 
 /* Description */
 .pipeline-description {
     font-size: 0.85rem !important;
     line-height: 1.5 !important;
-    color: var(--md-default-fg-color--light);
+    color: var(--ocean-muted-foreground, var(--md-default-fg-color--light));
     margin: 0 0 0.5rem 0 !important;
     flex-grow: 1;
 }
@@ -155,12 +170,19 @@ body:has(#pipelines-container) .md-content__inner {
 }
 
 .topic-tag {
-    background: var(--md-default-fg-color--lightest);
-    color: var(--md-default-fg-color);
+    background: var(--ocean-secondary, var(--md-default-fg-color--lightest));
+    color: var(--ocean-secondary-foreground, var(--md-default-fg-color));
     padding: 0.15rem 0.5rem;
     border-radius: 12px;
     font-size: 0.7rem;
     font-weight: 500;
+    border: 1px solid var(--ocean-border, transparent);
+    transition: all 0.2s ease;
+}
+
+.topic-tag:hover {
+    background: var(--ocean-accent, var(--md-default-fg-color--lighter));
+    transform: translateY(-1px);
 }
 
 /* Meta information (language, stars, forks) */
@@ -169,7 +191,7 @@ body:has(#pipelines-container) .md-content__inner {
     gap: 1rem;
     margin-bottom: 0.5rem;
     padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--md-default-fg-color--lightest);
+    border-bottom: 1px solid var(--ocean-border, var(--md-default-fg-color--lightest));
     font-size: 0.7rem;
 }
 
@@ -177,7 +199,7 @@ body:has(#pipelines-container) .md-content__inner {
     display: flex;
     align-items: center;
     gap: 0.3rem;
-    color: var(--md-default-fg-color--light);
+    color: var(--ocean-muted-foreground, var(--md-default-fg-color--light));
 }
 
 .meta-icon {
@@ -205,7 +227,7 @@ body:has(#pipelines-container) .md-content__inner {
 .pipeline-updated {
     font-size: 10px;
     font-family: 'JetBrains Mono', 'Courier New', Courier, monospace;
-    color: var(--md-default-fg-color--light);
+    color: var(--ocean-muted-foreground, var(--md-default-fg-color--light));
 }
 
 .pipeline-footer .md-button {
@@ -214,6 +236,16 @@ body:has(#pipelines-container) .md-content__inner {
     margin: 0;
     font-size: 0.85rem;
     padding: 0.5rem 1rem;
+    background-color: var(--ocean-primary, var(--md-primary-fg-color));
+    color: var(--ocean-primary-foreground, #fff);
+    border-radius: 6px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.pipeline-footer .md-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(5, 105, 255, 0.2);
+    filter: brightness(1.1);
 }
 
 /* Loading and error states */
@@ -223,15 +255,17 @@ body:has(#pipelines-container) .md-content__inner {
     grid-column: 1 / -1;
     padding: 2rem;
     text-align: center;
-    color: var(--md-default-fg-color--light);
-    background: var(--md-code-bg-color);
+    color: var(--ocean-muted-foreground, var(--md-default-fg-color--light));
+    background: var(--ocean-card, var(--md-code-bg-color));
+    border: 1px solid var(--ocean-border, var(--md-default-fg-color--lightest));
     border-radius: 8px;
     margin: 2rem 0;
 }
 
 .error-message {
-    border: 1px solid var(--md-error-fg-color);
-    color: var(--md-error-fg-color);
+    border: 1px solid var(--ocean-primary, var(--md-error-fg-color));
+    color: var(--ocean-primary, var(--md-error-fg-color));
+    background: var(--ocean-secondary, var(--md-code-bg-color));
 }
 
 .loading-message::before {

@@ -198,8 +198,55 @@ def generate_repo_card_markdown(repo):
     return markdown
 
 
+def generate_searchable_content(pipelines):
+    """
+    Generate hidden but searchable Markdown content for pipeline discovery.
+    
+    This content is invisible to users but indexed by Material for MkDocs search,
+    allowing users to find pipelines by name, description, topics, and language.
+    
+    Args:
+        pipelines: List of pipeline repository dictionaries
+        
+    Returns:
+        String of Markdown content with search-optimized text
+    """
+    lines = []
+    lines.append('<!-- BEGIN SEARCHABLE PIPELINE CONTENT -->')
+    lines.append('<!-- This content is hidden but enables search indexing of pipeline data -->')
+    lines.append('<div class="pipeline-search-content" style="display:none;" aria-hidden="true">')
+    lines.append('')
+    
+    for pipeline in pipelines:
+        name = pipeline.get('name', 'Unknown')
+        description = pipeline.get('description', 'Snakemake pipeline')
+        language = pipeline.get('language', 'Python')
+        topics = pipeline.get('topics', [])
+        stars = pipeline.get('stargazers_count', 0)
+        forks = pipeline.get('forks_count', 0)
+        
+        # Create search-optimized text combining all relevant information
+        topics_text = ', '.join(topics) if topics else 'bioinformatics, computational biology'
+        
+        # Format as a searchable paragraph for each pipeline
+        lines.append(f'**{name} Pipeline**: {description}. ')
+        lines.append(f'This {language} Snakemake workflow focuses on: {topics_text}. ')
+        lines.append(f'GitHub repository with {stars} stars and {forks} forks. ')
+        lines.append(f'Technologies: Snakemake, {language}, bioinformatics, genomics, computational biology.')
+        lines.append('')
+    
+    lines.append('</div>')
+    lines.append('<!-- END SEARCHABLE PIPELINE CONTENT -->')
+    lines.append('')
+    
+    return '\n'.join(lines)
+
+
 def generate_projects_page(org_name, pipelines):
-    """Generate the complete projects.md page."""
+    """Generate the complete projects.md page with searchable content."""
+    
+    # Generate searchable content block for search indexing
+    searchable_content = generate_searchable_content(pipelines)
     
     header = f"""---
 icon: lucide/folder-git-2
@@ -220,6 +267,8 @@ Explore our collection of **{len(pipelines)} Snakemake workflow{'s' if len(pipel
     [Snakemake](https://snakemake.readthedocs.io/) is a workflow management system that creates reproducible and scalable data analyses. All pipelines below contain a Snakefile for workflow orchestration.
 
 ---
+
+{searchable_content}
 
 ## Available Pipelines
 
@@ -340,8 +389,8 @@ def main():
     json_file = save_pipelines_data(snakemake_pipelines)
     print(f"✓ Saved data to {json_file}")
     
-    # Generate markdown
-    print("\nGenerating projects.md...")
+    # Generate markdown with searchable content
+    print("\nGenerating projects.md with searchable content...")
     markdown_content = generate_projects_page(org_name, snakemake_pipelines)
     
     # Write to file
@@ -350,8 +399,10 @@ def main():
         f.write(markdown_content)
     
     print(f"✓ Generated {output_file}")
-    print(f"  Listed {len(snakemake_pipelines)} Snakemake pipelines")
-    print("\n✅ Build complete! Run 'zensical build' to see the changes.")
+    print(f"  • Listed {len(snakemake_pipelines)} Snakemake pipelines")
+    print(f"  • Added hidden searchable content for search indexing")
+    print(f"  • Pipelines are now discoverable via site search")
+    print("\n✅ Build complete! Run 'make build' or 'zensical build' to update the search index.")
 
 
 if __name__ == '__main__':
