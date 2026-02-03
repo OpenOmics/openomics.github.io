@@ -125,7 +125,7 @@ def fetch_repos(org_name):
     return all_repos
 
 
-def filter_snakemake_pipelines(org_name, repos):
+def filter_snakemake_pipelines(org_name, repos, exclusion_set={}):
     """Filter repositories to only include those with Snakefiles."""
     snakemake_repos = []
     total = len(repos)
@@ -137,7 +137,7 @@ def filter_snakemake_pipelines(org_name, repos):
         print(f"  [{i}/{total}] Checking {repo_name}...", end=' ', flush=True)
         
         has_snake, location = has_snakefile(org_name, repo_name)
-        if has_snake:
+        if has_snake and repo_name not in exclusion_set:
             print(f"✓ Found at {location}")
             repo['snakefile_location'] = location
             snakemake_repos.append(repo)
@@ -349,6 +349,9 @@ def save_pipelines_data(pipelines, output_dir="docs"):
         }
         data["pipelines"].append(pipeline_data)
     
+    # Sort by stars (highest first)
+    data["pipelines"].sort(key=lambda p: p.get("stars", 0), reverse=True)
+    
     # Write to JSON file
     json_file = os.path.join(output_dir, "pipelines-data.json")
     with open(json_file, 'w', encoding='utf-8') as f:
@@ -358,7 +361,20 @@ def save_pipelines_data(pipelines, output_dir="docs"):
 
 
 def main():
+    
     org_name = "OpenOmics"
+    # Set of repos to exlude
+    exclusion_set = {
+        "NHLBI-1084",
+        "SnakeMaker",
+        "SnakeMaker_alt",
+        "brakerMake",
+        "mutation-seek",
+        "DeepSeq",
+        "ATAC-seq",
+        "SQANTImake",
+        "Long-read-genome-assembly"
+    }
     
     # Verify GitHub token is set (will exit if not found)
     print("Checking GitHub authentication...")
@@ -376,7 +392,8 @@ def main():
     
     # Filter for Snakemake pipelines
     print("\nFiltering for Snakemake pipelines...\n")
-    snakemake_pipelines = filter_snakemake_pipelines(org_name, all_repos)
+    snakemake_pipelines = filter_snakemake_pipelines(org_name, all_repos, exclusion_set)
+
     
     if not snakemake_pipelines:
         print("\n⚠️  No Snakemake pipelines found")
