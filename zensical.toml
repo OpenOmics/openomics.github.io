@@ -57,7 +57,7 @@ Copyright &copy; 2026 OpenOmics Community - Open Source Bioinformatics
 #
 # Read more: https://zensical.org/docs/customization/#additional-css
 #
-extra_css = ["stylesheets/ocean-theme.css", "stylesheets/pipeline-cards.css"]
+extra_css = ["stylesheets/ocean-theme.css", "stylesheets/pipeline-cards.css" , "stylesheets/terrain-animation.css"]
 
 # With the `extra_javascript` option you can add your own JavaScript to your
 # project to customize the behavior according to your needs.
@@ -109,7 +109,7 @@ logo = "images/openomics_logo.png"
 # - https://zensical.org/docs/setup/logo-and-icons/#favicon
 # - https://developer.mozilla.org/en-US/docs/Glossary/Favicon
 #
-#favicon = "images/favicon.png"
+favicon = "images/openomics_logo.png"
 
 # Zensical supports more than 60 different languages. This means that the
 # labels and tooltips that Zensical's templates produce are translated.

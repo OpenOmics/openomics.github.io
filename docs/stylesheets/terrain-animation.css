@@ -1,0 +1,21 @@
+#animation-container {
+  width: 100%;
+  height: 500px;
+  background: transparent;
+  overflow: hidden;
+  position: relative;
+  
+  /* Adjust these negative values if you need it even tighter */
+  margin-top: -10.0rem;    /* Pulls animation up towards the top */
+  margin-bottom: -2.5rem; /* Pulls text below up towards the animation */
+  
+  /* Fade out edges */
+  -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+  mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+}
+
+#animation-container canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
