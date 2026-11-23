@@ -1,300 +1,114 @@
-# OpenOmics Homepage
+# OpenOmics
 
-A website built with Python and Zensical to showcase OpenOmics Snakemake pipelines.
+A React website for the OpenOmics community, built into static HTML, CSS, and JavaScript with Vite. The charcoal, ivory, and chartreuse design opens with “Complex biology. Made legible.” and concentric rings of nucleotide sequences rotating into alignment. A full-width fading nucleotide banner leads into an editorial sequence study. The dedicated pipeline explorer, all 28 detailed entries, onboarding guidance, and community links are retained, with readable copy and controls on desktop and mobile.
 
-## Overview
+## Develop
 
-This website automatically discovers and displays Snakemake pipelines from the OpenOmics GitHub organization. The build process fetches repository information from GitHub and generates a dynamic pipeline showcase page.
+Use Node 24 LTS (`.nvmrc`), then:
 
-## Architecture
-
-The site uses a **data-driven approach** with separation of concerns:
-
-1. **Build-time data fetching** (`scripts/build_projects.py`)
-   - Fetches all OpenOmics repositories from GitHub API
-   - Scans each repository for Snakefiles
-   - Saves pipeline data to `docs/pipelines-data.json`
-   - Generates a minimal markdown page (`docs/projects.md`)
-
-2. **Client-side rendering** (`docs/javascripts/load-pipelines.js`)
-   - Loads pipeline data from JSON file
-   - Dynamically creates HTML cards for each pipeline
-   - Handles loading states and errors
-
-3. **Static site generation** (Zensical)
-   - Builds the final HTML from markdown
-   - Copies JSON data and JavaScript to the `site/` directory
-
-## Quick Start
-
-### Prerequisites
-
-**GitHub Personal Access Token Required**
-
-This project requires a GitHub Personal Access Token to fetch repository data. This ensures reliable API access and avoids rate limiting.
-
-1. **Create a token**: Visit [GitHub Settings → Tokens](https://github.com/settings/tokens/new)
-2. **Permissions needed**: Select `public_repo` scope for public repositories
-3. **Set environment variable**:
-   ```bash
-   export GITHUB_TOKEN='your_token_here'
-   ```
-
-### Installation
-
-```bash
-# Install Python dependencies
-pip install -r requirements.txt
-
-# Or use make
-make install
+```sh
+npm install
+npm run dev
 ```
 
-### Generate Pipeline Data
+Open the local URL printed by Vite. Direct dependency versions are pinned in `package.json`. The first installation generates `package-lock.json`; retain it and use `npm ci` for subsequent reproducible installations. CI also includes its resolved lockfile in the build artifact.
 
-```bash
-# Set your GitHub token (required!)
-export GITHUB_TOKEN='your_token_here'
+## Build and preview
 
-# Fetch fresh data from GitHub
-python scripts/build_projects.py
-
-# Or use make
-make generate
+```sh
+npm test
+npm run build
+npm run preview
 ```
 
-### Build the Site
+The complete deployable website is in **`dist/`**. No Node server, API service, credentials, or database is needed in production. Serve it over HTTP(S); opening `index.html` directly as a `file://` URL does not load module scripts correctly.
 
-```bash
-# Build with fresh pipeline data
-make build
+The build renders each page to HTML, then hydrates it in the browser. The homepage copy and the pipeline page's repository links are available without JavaScript. Search, filters, repository details, copy actions, and the canvas animation become interactive after hydration. Native FAQ disclosures work without JavaScript.
 
-# Or build without regenerating data
-make quick-build
+| URL | Static file | Content |
+| --- | --- | --- |
+| `/` | `dist/index.html` | Landing page, mission, collection link, getting started, and community |
+| `/pipelines/` | `dist/pipelines/index.html` | Full pipeline explorer with more room for browsing and documentation |
+
+The pipeline page works when opened directly, refreshed, or visited with JavaScript disabled. Navigation uses normal links, so it requires no SPA fallback or client-side router. During development, the Vite server resolves the same page identities from the URL. The former homepage `#pipelines` bookmark reaches the collection link.
+
+The footer year is captured once during the build and passed to the client, preventing hydration differences at year boundaries. The hero plays one eight-second ring alignment and then stops scheduling animation frames. Pause, resume, and replay controls are available. Reduced-motion visitors immediately see the completed artwork and may explicitly choose to play it. Offscreen and hidden-tab time does not advance the animation; listeners, observers, frames, and cached graphics are released on unmount.
+
+The animation uses Canvas 2D with cached character sprites, a bounded character field, fewer characters on mobile, a pixel-density cap of 1.5, and a drawing target of 30 frames per second. Twenty-one concentric nucleotide tracks rotate in alternating directions, at different rates, before easing to rest from the inside outward. Their highlighted ATGC motifs meet on one fixed registration axis. Radii and spacing stay constant; characters move with their track instead of independently. The headline, navigation, and controls remain HTML. Desktop and mobile SVG fallbacks use the same deterministic rings and settled character positions as the canvas. They are included in the server-rendered page and remain visible without JavaScript or if canvas initialization fails. Mobile uses nine rings in a dedicated composition below the headline and controls. The animation adds no third-party dependency, video download, or runtime network request. Frame rate still depends on the device and should be measured on representative phones before release.
+
+## Project structure
+
+| Location | Purpose |
+| --- | --- |
+| `src/App.jsx` | Page composition |
+| `src/components/` | Navigation, hero, content, pipeline explorer |
+| `src/styles.css` | Responsive design and motion preferences |
+| `src/data/pipelines.json` | Reviewed catalog and source metadata |
+| `src/lib/catalog.js` | Pure search, category, and selection helpers |
+| `src/lib/sequence-field.js` | Shared concentric-ring geometry, cached glyphs, and deterministic rotation |
+| `src/components/SequenceStill.jsx` | Responsive server-rendered still compositions using the shared geometry |
+| `src/lib/sequence-animation.js` | Animation timing, pause/replay, visibility, and reduced-motion lifecycle |
+| `src/lib/routes.js` | Shared page metadata and links, including subdirectory deployments |
+| `src/main.jsx` | Client startup and hydration |
+| `src/entry-server.jsx` | Build-time HTML renderer |
+| `scripts/build.mjs` | Static output, metadata, redirects, and sitemap |
+| `tests/` | Catalog, deployment-path, and browser regression checks |
+| `.github/workflows/docs.yml` | Pull-request validation and Pages deployment |
+
+## Content and catalog
+
+Edit `src/data/pipelines.json` to update the explorer. Its 28 repositories were preserved from the reviewed **3 February 2026** catalog snapshot. Categories and short descriptions are editorial; the page explicitly identifies that list's date and links to its source. The expanded descriptions were separately reviewed against project documentation on **18 November 2026**. Nothing in the interface claims to be a live GitHub count.
+
+For each entry maintain the exact repository name, canonical GitHub URL, short description, category array, and topic array. Its `details` object supplies the explorer's richer content:
+
+| Field | Content |
+| --- | --- |
+| `overview` | What the workflow does and the research task it supports |
+| `inputs` | Documented input data and reference requirements |
+| `outputs` | Principal documented results, reports, or artifacts |
+| `notes` | Practical prerequisites and important documented limitations |
+| `documentationUrl` | Current project instructions |
+| `sourceUrl` | Source used to write the description |
+| `reviewedOn` | Date those details were checked, in `YYYY-MM-DD` format |
+| `status` (optional) | Documented `archived`, `scaffold`, or `template` status; omit when not established |
+| `sources` (optional) | Labeled supporting documentation or workflow source links when the overview relies on multiple files |
+
+Search includes overviews, inputs, outputs, practical notes, and documented status labels. The expanded view keeps source and documentation links close to each description; run guidance is a native disclosure to keep the main facts easy to scan. Archived projects and development scaffolds are explicitly labeled. Where a repository does not document a detail, say so rather than infer a capability. A documentation review is not an execution benchmark or scientific validation.
+
+Update per-workflow review dates when checking descriptions, and list snapshot metadata only when reviewing the catalog membership. Run `npm test` and inspect search/category behavior after edits. The production build never fetches GitHub or needs a token.
+
+When adding this project to the existing website repository, retain its `docs/`, Python catalog generator, and Zensical configuration for reference and content provenance. They are not needed by the React build and are not duplicated in this standalone package. The historical site instructions are included in `docs/legacy-site.md`.
+
+## Checks
+
+```sh
+npm run check                  # Unit checks and verified static build
+npx playwright install chromium
+npm run test:browser           # Serves dist temporarily, then closes it
 ```
 
-### Local Development
+Browser checks exercise both prerendered pages, direct navigation and refresh, hydration, the JavaScript-disabled catalog and hero fallback, search and filters, empty-state reset, repository selection, copy behavior, mobile navigation, animation pause/resume/completion/replay, reduced motion, legacy URLs, readable text sizes, full-width nucleotide artwork on ultrawide screens, and horizontal overflow. CI installs Chromium with its OS dependencies. Failure screenshots are uploaded with the workflow artifacts. If using an installed system browser, set `PLAYWRIGHT_EXECUTABLE_PATH` to its full path when running browser checks.
 
-```bash
-# Start development server
-make serve
+Unit tests also exercise animation timing and cleanup with controlled scheduling, hidden and offscreen suspension, resize behavior, failure fallback, bounded geometry, and cached glyph rendering. These checks do not replace a production build or a real-device performance review.
 
-# Or manually
-python -m zensical serve
+## GitHub Pages
+
+To install in the existing repository, create a branch and copy this package's contents into the repository root, including `.github/`, `.gitignore`, and `.nvmrc`. Review the changes before merging. The supplied `.github/workflows/docs.yml` replaces the Zensical deployment workflow at the same path; keep only one workflow deploying the site.
+
+The default deployment target is `https://openomics.github.io/`. Pull requests run checks and upload a review build. The deploy job runs only for `main`, after the build and browser checks pass. Set the repository's **Settings → Pages → Source** to **GitHub Actions** if it is not already configured that way.
+
+The old `/projects/` and `/projects.html` URLs redirect to `/pipelines/`. `/about/` and `/about.html` redirect to the homepage's approach section. A standalone `404.html`, `robots.txt`, sitemap covering both pages, page-specific metadata and canonical URLs, and SVG favicon are included.
+
+For a different host or a project subdirectory, set the public URL at build time:
+
+```sh
+SITE_URL=https://example.org/openomics/ npm run build
 ```
 
-## Project Structure
+The asset base is derived from the URL path. An optional `SITE_BASE` must match it. Use the same environment when running `npm run preview`. For a custom GitHub Pages domain, configure the domain in repository settings and add the corresponding `public/CNAME` file before building.
 
-```
-root
-├── config.yml                          # Legacy config
-├── zensical.toml                       # Zensical configuration
-├── requirements.txt                    # Python dependencies
-├── Makefile                            # Build commands
-│
-├── scripts/
-│   ├── build_projects.py              # Fetches GitHub data & generates JSON
-│
-├── docs/                              # Source content
-│   ├── index.md                       # Homepage
-│   ├── about.md                       # About page
-│   ├── projects.md                    # Pipelines page (auto-generated)
-│   ├── pipelines-data.json            # Pipeline data (auto-generated)
-│   │
-│   ├── javascripts/
-│   │   ├── load-pipelines.js          # Client-side rendering
-│   │
-│   └── stylesheets/
-│       ├── pipeline-cards.css         # Pipeline card styles
-│
-└── site/                              # Built site (generated)
-    ├── index.html
-    ├── projects/
-    │   └── index.html
-    ├── pipelines-data.json           # Copied from docs/
-    └── javascripts/
-        └── load-pipelines.js         # Copied from docs/
-```
+## Design notes
 
-## How It Works
+The concentric-ring animation is an illustrative metaphor for sequence alignment and making complex data legible. It does not depict measured sequence data, execute a pipeline, or perform a sequence-alignment algorithm. The interface does not imply clinical validation of any workflow. Consult each repository's documentation, requirements, and license before using or modifying its code.
 
-### 1. Data Fetching (Build Time)
-
-The `scripts/build_projects.py` script:
-
-- Fetches all public repositories from the OpenOmics organization
-- Checks each repository for a Snakefile in common locations:
-  - `Snakefile`
-  - `workflow/Snakefile`
-  - `workflows/Snakefile`
-  - etc.
-- Extracts repository metadata:
-  - Name, description, URL
-  - Stars, forks, topics
-  - Last update date
-  - Snakefile location
-- Saves data to `docs/pipelines-data.json`
-
-**JSON Structure:**
-```json
-{
-  "generated_at": "2026-01-27T12:43:09.812151",
-  "count": 22,
-  "pipelines": [
-    {
-      "name": "pipeline-name",
-      "description": "Pipeline description",
-      "url": "https://github.com/OpenOmics/pipeline-name",
-      "language": "Python",
-      "stars": 5,
-      "forks": 3,
-      "topics": ["tag1", "tag2"],
-      "updated_at": "2026-01-27T18:08:04Z",
-      "snakefile_location": "workflow/Snakefile"
-    }
-  ]
-}
-```
-
-### 2. Page Generation (Build Time)
-
-The script generates `docs/projects.md` with:
-- Static header content (intro, info boxes)
-- Empty container div: `<div id="pipelines-container">`
-- Script tag to load the JavaScript
-- Static footer content (about, getting started, etc.)
-
-### 3. Dynamic Rendering (Runtime)
-
-When users visit the page:
-1. Browser loads `projects/index.html`
-2. JavaScript (`load-pipelines.js`) executes
-3. Fetches `pipelines-data.json`
-4. Dynamically creates HTML cards for each pipeline
-5. Inserts cards into the `pipelines-container` div
-
-## Benefits
-
-✅ **Separation of Concerns**: Data fetching is separate from presentation  
-✅ **Reusable Data**: JSON can be consumed by other tools or pages  
-✅ **Faster Builds**: Don't need to embed large HTML in markdown  
-✅ **Flexible Frontend**: Easy to add sorting, filtering, or search  
-✅ **Better Caching**: Browser can cache JavaScript separately from content  
-✅ **API-Ready**: JSON file acts as a static API endpoint
-
-## Available Commands
-
-```bash
-make help          # Show all available commands
-make install       # Install Python dependencies
-make generate      # Fetch GitHub data and generate JSON
-make build         # Generate data + build static site
-make quick-build   # Build without regenerating data
-make serve         # Start development server
-make deploy        # Build and prepare for deployment
-make clean         # Remove build artifacts
-make update        # Update pipeline data and rebuild
-```
-
-## Deployment
-
-The site is deployed from the `site/` directory. After running `make build`, the `site/` directory contains:
-- All static HTML pages
-- `pipelines-data.json` (pipeline data)
-- `javascripts/load-pipelines.js` (rendering script)
-- All other assets (CSS, images, etc.)
-
-## Configuration
-
-### Zensical Configuration (`zensical.toml`)
-
-The site is configured using Zensical, a Python-based static site generator. See `zensical.toml` for theme settings, navigation, and plugins.
-
-### GitHub API
-
-**GitHub Token Required**: The build script requires a GitHub Personal Access Token to be set as an environment variable.
-
-```bash
-# Create a token at: https://github.com/settings/tokens/new
-# Only needs 'public_repo' scope
-
-export GITHUB_TOKEN='your_token_here'
-```
-
-**Rate Limits with Authentication:**
-- Authenticated requests: 5,000 requests per hour
-- Unauthenticated requests: 60 requests per hour (NOT SUPPORTED)
-
-The script will check for the token on startup and provide clear instructions if it's missing.
-
-## Customization
-
-### Add More Data Fields
-
-Edit `scripts/build_projects.py` and update the `save_pipelines_data()` function:
-
-```python
-pipeline_data = {
-    "name": repo.get('name'),
-    # Add more fields from GitHub API
-    "open_issues": repo.get('open_issues_count', 0),
-    "license": repo.get('license', {}).get('name', 'Unknown'),
-}
-```
-
-### Modify Card Design
-
-Edit `docs/javascripts/load-pipelines.js` in the `createPipelineCard()` function to change the HTML structure.
-
-Edit `docs/stylesheets/pipeline-cards.css` to update the styling.
-
-**Current Design Features:**
-- 3-column responsive grid layout
-- Compact card design with smaller text
-- Meta information with icons (language, stars, forks)
-- Topic tags as pill-style badges (max 4 shown)
-- Full-width "View Pipeline" button
-- Updated date in footer
-- No Snakefile location displayed
-
-### Add Filtering/Sorting
-
-Extend `load-pipelines.js` to add interactive controls:
-- Filter by language, topics, or stars
-- Sort by name, stars, or last update
-- Search by keywords
-
-## Troubleshooting
-
-### GitHub API Rate Limit
-
-**Problem:** Build fails with "API rate limit exceeded"
-
-**Solution:** 
-- Wait an hour for the rate limit to reset
-- Use a GitHub Personal Access Token (see Configuration)
-- Cache API responses during development
-
-### Pipelines Not Displaying
-
-**Problem:** Page shows "Loading pipelines..." forever
-
-**Solution:**
-- Check browser console for errors
-- Verify `pipelines-data.json` exists in the `site/` directory
-- Verify the JSON file is valid (use `python -m json.tool site/pipelines-data.json`)
-- Check that JavaScript file was copied to `site/javascripts/`
-
-### Build Errors
-
-**Problem:** `make build` fails
-
-**Solution:**
-- Ensure Python dependencies are installed: `make install`
-- Check that zensical is installed: `pip show zensical`
-- Verify virtual environment is activated
-- Check for syntax errors in Python scripts
-
-## License
-
-Copyright © 2026 OpenOmics Community - Open Source Bioinformatics
+Design reference: [Content Architecture](https://www.contentarchitecture.dev/). React implementation and genomics artwork are specific to OpenOmics.
