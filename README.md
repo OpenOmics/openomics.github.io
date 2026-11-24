@@ -1,6 +1,6 @@
 # OpenOmics
 
-A React website for the OpenOmics community, built into static HTML, CSS, and JavaScript with Vite. The charcoal, ivory, and chartreuse design opens with “Start decoding / Complex biology” and concentric rings of nucleotide sequences rotating into alignment. A full-width fading nucleotide banner leads into an editorial sequence study. The site includes a dedicated explorer for 31 projects, onboarding guidance, and community links, with readable copy and controls on desktop and mobile.
+A React website for the OpenOmics community, built into static HTML, CSS, and JavaScript with Vite. The charcoal, ivory, and chartreuse design opens with “Start decoding / Complex biology” and concentric rings of nucleotide sequences rotating into alignment. A full-width fading nucleotide banner leads into an illustrative multiple sequence alingment. The site includes a dedicated explorer for projects/tools/packages, onboarding guidance, and community links, with readable copy and controls on desktop and mobile.
 
 ## Develop
 
@@ -112,6 +112,6 @@ The asset base is derived from the URL path. An optional `SITE_BASE` must match 
 
 ## Design notes
 
-The concentric-ring animation is an illustrative metaphor for sequence alignment and making complex data legible. It does not depict measured sequence data, execute a pipeline, or perform a sequence-alignment algorithm. The interface does not imply clinical validation of any workflow. Consult each repository's documentation, requirements, and license before using or modifying its code.
+The concentric-ring animation is an illustrative metaphor for sequence alignment and making complex data more clear. It is pure illustrative and it does not perform any sequence align. Please consult each repository's documentation, requirements, and license before using or modifying its code.
 
-Design reference: [Content Architecture](https://www.contentarchitecture.dev/). React implementation and genomics artwork are specific to OpenOmics.
+React implementation and genomics artwork are specific to OpenOmics.
