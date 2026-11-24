@@ -130,7 +130,7 @@ async function expectStaticCatalog(page, defaultPipeline) {
 }
 
 async function expectHomeLinks(page) {
-  assert.match(await page.locator('#heroTitle').innerText(), /Start Decoding\s*Complex Biology/, 'The homepage preserves the current decoding headline');
+  assert.match(await page.locator('#heroTitle').innerText(), /Start decoding\s*Complex biology/, 'The homepage preserves the current decoding headline');
   const artDescription = await page.locator('.art-caption .sr').textContent();
   assert.match(artDescription, /rings?/i, 'An accessible description identifies the sequence-ring artwork');
   assert.match(artDescription, /align/i, 'The accessible description explains the alignment');
@@ -448,10 +448,10 @@ try {
   await page.locator('[data-category="Genomics"]').click();
   await expectRepositoryNames(page, [
     'genome-seek', 'assembly-seek', 'mr-seek',
-    'istari', 'mpox-seek', 'pbAmp-seek', 'fragmentomics',
+    'istari', 'mpox-seek', 'pbAmp-seek', 'fragmentomics', 'weave', 'tcr-seek',
   ]);
   await page.locator('[data-category="Utilities"]').click();
-  await expectRepositoryNames(page, ['baseline', 'parabricks-benchmark', 'istari', 'weave', 'CellSight', 'snakevision']);
+  await expectRepositoryNames(page, ['baseline', 'CellSight', 'PDtoMSstats', 'snakevision']);
   assert.equal(await page.locator('[data-category="Utilities"]').getAttribute('aria-pressed'), 'true');
   await search.fill('no-such-openomics-workflow-xyz');
   await waitForRepositoryCount(page, 0);
@@ -469,7 +469,7 @@ try {
     ['CellSight', 'Single cell', 'h5ad', 'R package'],
     ['PDtoMSstats', 'Proteomics', 'Proteome Discoverer', 'Analysis workflow'],
     ['microbe-count', 'Metagenomics', 'host-aligned paired-end BAM', 'Pipeline'],
-    ['tcr-seek', 'Transcriptomics', 'AIRR', 'Pipeline'],
+    ['tcr-seek', 'Genomics', 'AIRR', 'Pipeline'],
     ['snakevision', 'Utilities', 'DOT', 'Command-line tool'],
   ]) {
     await page.locator('#clearSearch').click();
@@ -484,7 +484,7 @@ try {
   }
   await page.locator('#clearSearch').click();
   await page.locator('[data-category="Archived"]').click();
-  await expectRepositoryNames(page, ['cfChIP-seek', 'cyte-seek']);
+  await expectRepositoryNames(page, ['cfChIP-seek', 'cyte-seek', 'parabricks-benchmark']);
   await page.locator('[data-category="All"]').click();
   await expectRepositoryNames(page, expectedRepositories);
   console.log('PASS: new packages, tools, and pipelines are searchable, categorized, and sourced; Archived remains intact');

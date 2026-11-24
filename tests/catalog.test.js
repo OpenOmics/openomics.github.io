@@ -76,9 +76,9 @@ test('category and text filters intersect rather than returning unrelated matche
 });
 
 test('repositories assigned to two categories appear in both filters', () => {
-  for (const [name, categories] of [['istari', ['Genomics', 'Utilities']], ['CellSight', ['Single cell', 'Utilities']]]) {
+  for (const [name, categories] of [['mpox-seek', ['Genomics', 'Metagenomics']], ['CellSight', ['Single cell', 'Utilities']]]) {
     for (const category of categories) {
-      assert.ok(filterPipelines(ordered, { category }).some((pipeline) => pipeline.name === name));
+      assert.ok(filterPipelines(ordered, { category }).some((pipeline) => pipeline.name === name), `${name} must appear in ${category}`);
     }
   }
   assert.equal(categoryLabel('Single cell'), 'Single cell & spatial');
@@ -135,13 +135,13 @@ test('every pipeline has sourced scientific details and a distinct documentation
 });
 
 test('archived projects stay discoverable without appearing in active analysis categories', () => {
-  const archivedNames = ['cfChIP-seek', 'cyte-seek'];
+  const archivedNames = ['cfChIP-seek', 'cyte-seek', 'parabricks-benchmark'];
   assert.deepEqual(filterPipelines(ordered, { category: 'Archived' }).map(({ name }) => name), archivedNames);
   for (const name of archivedNames) {
     assert.equal(pipelines.find((pipeline) => pipeline.name === name).details.status, 'archived');
     assert.ok(filterPipelines(ordered, { category: 'All', query: name }).some((pipeline) => pipeline.name === name));
-    for (const category of ['Epigenomics', 'Single cell']) {
-      assert.ok(!filterPipelines(ordered, { category }).some((pipeline) => pipeline.name === name));
+    for (const category of CATEGORIES.filter((value) => !['All', 'Archived'].includes(value))) {
+      assert.ok(!filterPipelines(ordered, { category }).some((pipeline) => pipeline.name === name), `${name} must not appear in active category ${category}`);
     }
   }
   assert.equal(pipelineStatusLabel('template'), 'Workflow template');
