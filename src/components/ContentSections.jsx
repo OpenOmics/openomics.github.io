@@ -123,7 +123,7 @@ export function GettingStarted({ pipelineHref }) {
               <span className="step-num">03 /</span>
               <div>
                 <h3>Prepare your environment.</h3>
-                <p>Install the required Snakemake version and follow the repository’s environment or container setup. Check the requirements for your workstation or cluster environment.</p>
+                <p>Install the dependencies specified by the project and follow its environment or container setup. Check the requirements for your workstation or cluster environment.</p>
               </div>
             </li>
             <li>

@@ -71,7 +71,7 @@ function PipelineDetails({ pipeline, enhanced, onReset }) {
     <>
       <div className="detail-top">
         <span className="file-path">OpenOmics / {pipeline.name}</span>
-        <span className="mono muted">README ↗</span>
+        <a className="mono muted" href={links.readme} {...externalLink}>README ↗</a>
       </div>
       <div className="detail-kicker">
         {details?.type && <span className="project-type">{details.type} · </span>}
@@ -153,6 +153,7 @@ export default function PipelineExplorer({ standalone = false, homeHref = '/' })
   const [announcement, setAnnouncement] = useState('');
   const searchRef = useRef(null);
   const listRef = useRef(null);
+  const scrollToSelectionRef = useRef(false);
   const [hasMoreBelow, setHasMoreBelow] = useState(false);
 
   // The server output contains real links for every repository. Browser-only
@@ -169,6 +170,16 @@ export default function PipelineExplorer({ standalone = false, homeHref = '/' })
     const list = listRef.current;
     if (!list) return;
 
+    if (scrollToSelectionRef.current) {
+      // Scroll only the list after filtering, keeping the selected result
+      // visible without moving the page or taking focus from the controls.
+      const row = list.querySelector('[aria-pressed="true"]');
+      list.scrollTop = row
+        ? list.scrollTop + row.getBoundingClientRect().top - list.getBoundingClientRect().top
+        : 0;
+      scrollToSelectionRef.current = false;
+    }
+
     const updateScrollHint = () => {
       setHasMoreBelow(list.scrollHeight - list.clientHeight - list.scrollTop > 1);
     };
@@ -184,6 +195,7 @@ export default function PipelineExplorer({ standalone = false, homeHref = '/' })
   }, [items, enhanced]);
 
   function changeFilters(nextQuery, nextCategory) {
+    scrollToSelectionRef.current = nextQuery !== query || nextCategory !== category;
     const nextItems = filterPipelines(pipelines, { query: nextQuery, category: nextCategory });
     setQuery(nextQuery);
     setCategory(nextCategory);

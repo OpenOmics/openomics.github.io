@@ -188,6 +188,9 @@ const catalogCopySelectors = [
 async function expectRichDetails(page, pipeline) {
   const { details } = pipeline;
   assert.ok(details, `${pipeline.name} has reviewed detail content in the catalog`);
+  const readmeLink = page.locator('.detail-top a');
+  assert.equal(await readmeLink.getAttribute('href'), `${pipeline.url}#readme`, `${pipeline.name}: top README label is a working link`);
+  assert.equal(await readmeLink.getAttribute('target'), '_blank');
   assert.equal((await page.locator('.pipeline-overview').textContent()).trim(), details.overview);
   const groups = await page.locator('.pipeline-facts').evaluate((container) => (
     [...container.querySelectorAll('section')].map((section) => ({
@@ -523,6 +526,37 @@ try {
   await expectRichDetails(page, pipelines.find((pipeline) => pipeline.name === 'parabricks-benchmark'));
   await openRunGuidance(page);
   await expectNoHorizontalOverflow(page, '320px pipeline page with long repository name');
+  // A filter can shrink a scrolled list while selecting a result above the
+  // old scroll position. Verify the chosen result remains visible on mobile.
+  await page.locator('[data-repo="RNA-seek"]').click();
+  await page.locator('#repoList').evaluate((list) => { list.scrollTop = list.scrollHeight; });
+  await page.locator('[data-category="Genomics"]').click();
+  await page.waitForFunction(() => document.querySelector('#pipelineDetailTitle')?.textContent === 'genome-seek');
+  async function expectSelectedRowVisible(name) {
+    await page.waitForFunction((name) => {
+      const list = document.getElementById('repoList');
+      const selected = list.querySelector('[aria-pressed="true"]');
+      if (selected?.dataset.repo !== name) return false;
+      const bounds = list.getBoundingClientRect();
+      const row = selected.getBoundingClientRect();
+      return row.top >= bounds.top - 1 && row.bottom <= bounds.bottom + 1;
+    }, name);
+  }
+  await expectSelectedRowVisible('genome-seek');
+  assert.equal(await page.locator('[data-category="Genomics"]').evaluate((element) => element === document.activeElement), true, 'Filtering keeps focus on the category control');
+  // Preserve an existing selection too, including when clearing a search.
+  await page.locator('[data-repo="weave"]').click();
+  await page.locator('[data-category="All"]').click();
+  await expectSelectedRowVisible('weave');
+  await search.fill('weave');
+  await expectRepositoryNames(page, ['weave']);
+  await page.locator('#clearSearch').click();
+  await expectSelectedRowVisible('weave');
+  assert.equal(await search.evaluate((element) => element === document.activeElement), true);
+  await search.fill('no-such-project-scroll-check');
+  await page.locator('#reset').click();
+  await expectSelectedRowVisible('genome-seek');
+  console.log('PASS: mobile filter/search changes keep the selected row visible without taking focus');
   await page.goto(origin, { waitUntil: 'load' });
   await expectHomeLinks(page);
   await expectMobileMenu(page, 'Homepage');

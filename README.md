@@ -1,17 +1,17 @@
 # OpenOmics
 
-A React website for the OpenOmics community, built into static HTML, CSS, and JavaScript with Vite. The charcoal, ivory, and chartreuse design opens with “Complex biology. Made legible.” and concentric rings of nucleotide sequences rotating into alignment. A full-width fading nucleotide banner leads into an editorial sequence study. The dedicated pipeline explorer, all 28 detailed entries, onboarding guidance, and community links are retained, with readable copy and controls on desktop and mobile.
+A React website for the OpenOmics community, built into static HTML, CSS, and JavaScript with Vite. The charcoal, ivory, and chartreuse design opens with “Start decoding / Complex biology” and concentric rings of nucleotide sequences rotating into alignment. A full-width fading nucleotide banner leads into an editorial sequence study. The site includes a dedicated explorer for 31 projects, onboarding guidance, and community links, with readable copy and controls on desktop and mobile.
 
 ## Develop
 
 Use Node 24 LTS (`.nvmrc`), then:
 
 ```sh
-npm install
+npm ci
 npm run dev
 ```
 
-Open the local URL printed by Vite. Direct dependency versions are pinned in `package.json`. The first installation generates `package-lock.json`; retain it and use `npm ci` for subsequent reproducible installations. CI also includes its resolved lockfile in the build artifact.
+Open the local URL printed by Vite. Direct dependency versions are pinned in `package.json`, and the committed `package-lock.json` records the resolved dependency tree. Use `npm ci` to install from that lockfile. CI also includes the lockfile in the build artifact.
 
 ## Build and preview
 
@@ -57,7 +57,7 @@ The animation uses Canvas 2D with cached character sprites, a bounded character 
 
 ## Content and catalog
 
-Edit `src/data/pipelines.json` to update the explorer. The catalog currently contains **31 projects**, including pipelines, an R package, and command-line tools. It began with the **3 February 2026** catalog snapshot and was expanded on **24 November 2026** with CellSight, PDtoMSstats, microbe-count, tcr-seek, and snakevision. DLscID and iso-seek were removed from the current catalog before this expansion. Categories and short descriptions are editorial; PDtoMSstats appears under Proteomics, and cfChIP-seek and cyte-seek appear under Archived.
+Edit `src/data/pipelines.json` to update the explorer. The catalog currently contains **31 projects**, including pipelines, an R package, and command-line tools. It began with the **3 February 2026** catalog snapshot and was expanded on **24 November 2026** with CellSight, PDtoMSstats, microbe-count, tcr-seek, and snakevision. DLscID and iso-seek were removed from the current catalog before this expansion. Categories and short descriptions are editorial; PDtoMSstats appears under Proteomics, and cfChIP-seek, cyte-seek, and parabricks-benchmark appear under Archived.
 
 The existing descriptions were reviewed on **18 November 2026**; the five additions were checked against their GitHub READMEs, usage guides, and relevant source files on **24 November 2026**. Each detail view retains its own review date and source links. Metadata preserves the original snapshot date and source, tracks the latest catalog update separately, and records the current count. The site does not fetch GitHub at runtime.
 
@@ -80,7 +80,7 @@ Search includes project types, overviews, inputs, outputs, practical notes, and 
 
 Update each project’s review date when checking its description. When membership changes, update `metadata.count`, `updatedDate`, and `updatedDisplayDate`; retain the original snapshot provenance. Run `npm test` and inspect search/category behavior after edits. The production build never fetches GitHub or needs a token.
 
-When adding this project to the existing website repository, retain its `docs/`, Python catalog generator, and Zensical configuration for reference and content provenance. They are not needed by the React build and are not duplicated in this standalone package. The historical site instructions are included in `docs/legacy-site.md`.
+The React/Vite site replaces the former Python/Zensical site. The old `docs/` pages, Python catalog generator, Makefile, and Zensical configuration have been removed; their history remains available in Git. Maintain current content in `src/components/` and `src/data/pipelines.json`.
 
 ## Checks
 
@@ -96,7 +96,7 @@ Unit tests also exercise animation timing and cleanup with controlled scheduling
 
 ## GitHub Pages
 
-To install in the existing repository, create a branch and copy this package's contents into the repository root, including `.github/`, `.gitignore`, and `.nvmrc`. Review the changes before merging. The supplied `.github/workflows/docs.yml` replaces the Zensical deployment workflow at the same path; keep only one workflow deploying the site.
+The `.github/workflows/docs.yml` workflow builds and validates this React/Vite site, then publishes `dist/` to GitHub Pages. It replaces the former Zensical deployment workflow.
 
 The default deployment target is `https://openomics.github.io/`. Pull requests run checks and upload a review build. The deploy job runs only for `main`, after the build and browser checks pass. Set the repository's **Settings → Pages → Source** to **GitHub Actions** if it is not already configured that way.
 
