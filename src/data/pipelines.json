@@ -1,0 +1,1489 @@
+{
+  "metadata": {
+    "generatedAt": "2026-02-03T17:36:20.603218",
+    "generatedDate": "2026-02-03",
+    "displayDate": "03 Feb 2026",
+    "count": 31,
+    "sourceUrl": "https://github.com/OpenOmics/openomics.github.io/blob/main/docs/pipelines-data.json",
+    "note": "Repository membership is a stored snapshot, not a live organization scan. Categories and short summaries are editorial. Expanded descriptions, requirements, and status labels were reviewed separately against the linked repository documentation and workflow source; this review does not establish execution or scientific validation.",
+    "detailsReviewedDate": "2026-11-18",
+    "detailsReviewedDisplayDate": "18 Nov 2026",
+    "updatedDate": "2026-11-24",
+    "updatedDisplayDate": "24 Nov 2026"
+  },
+  "pipelines": [
+    {
+      "name": "genome-seek",
+      "description": "Whole genome and exome sequencing pipeline.",
+      "url": "https://github.com/OpenOmics/genome-seek",
+      "categories": [
+        "Genomics"
+      ],
+      "topics": [
+        "copy-number-variation",
+        "germline-variants",
+        "hla-typing",
+        "pipeline",
+        "quality-control",
+        "singularity",
+        "snakemake",
+        "somatic-variants",
+        "structural-variants",
+        "variant-annotation",
+        "variant-effect-prediction",
+        "whole-exome-sequencing",
+        "whole-genome-sequencing"
+      ],
+      "details": {
+        "overview": "Processes Illumina whole-genome and whole-exome sequencing data through quality control and variant analysis. Germline calling is part of the standard workflow, with optional somatic variant, structural variant, copy-number, HLA, and annotation steps. Researchers can select the analyses appropriate to their study and use matched tumor-normal pairs when available.",
+        "inputs": [
+          "Gzipped paired-end Illumina FASTQ files.",
+          "A tumor-normal pairs file when using matched somatic analysis.",
+          "An optional capture-region BED file for whole-exome analysis."
+        ],
+        "outputs": [
+          "Germline variant calls and quality-control results.",
+          "Somatic variant calls when the somatic option is enabled.",
+          "Optional structural-variant, copy-number, and HLA results.",
+          "Variant annotations when OpenCRAVAT is enabled."
+        ],
+        "notes": [
+          "Single-end sequencing data are not supported.",
+          "Whole-genome analysis is the default; exome and additional variant analyses must be selected explicitly.",
+          "The README specifies Snakemake <=7.32.3 and Singularity >=3.5, with Apptainer also described as a container-runtime option."
+        ],
+        "documentationUrl": "https://openomics.github.io/genome-seek/usage/run/",
+        "sourceUrl": "https://github.com/OpenOmics/genome-seek/blob/main/docs/usage/run.md",
+        "sources": [
+          {
+            "label": "Project overview and requirements",
+            "url": "https://github.com/OpenOmics/genome-seek/blob/main/README.md"
+          }
+        ],
+        "reviewedOn": "2026-11-18"
+      }
+    },
+    {
+      "name": "methyl-seek",
+      "description": "Bisulphite-sequencing DNA methylation pipeline",
+      "url": "https://github.com/OpenOmics/methyl-seek",
+      "categories": [
+        "Epigenomics"
+      ],
+      "topics": [
+        "bisulfite-sequencing",
+        "cell-free-dna",
+        "deconvolution",
+        "dmr"
+      ],
+      "details": {
+        "overview": "Processes paired-end bisulfite sequencing data to align reads, extract CpG methylation measurements, and summarize sequencing and alignment quality. Its workflow also defines optional cell-free DNA deconvolution outputs for supported references. Use it for CpG profiling and supported deconvolution workflows; confirm availability before planning differential methylation analysis.",
+        "inputs": [
+          "Gzipped paired-end Illumina FASTQ files from bisulfite sequencing.",
+          "Configured bisulfite reference files and, for deconvolution, the matching methylation reference resources."
+        ],
+        "outputs": [
+          "Bismark alignments and deduplicated CRAM files.",
+          "Compressed CpG reports and methylation bedGraph files.",
+          "Bismark and MultiQC summaries.",
+          "Optional cell-free DNA deconvolution tables."
+        ],
+        "notes": [
+          "Single-end data are not supported; deconvolution depends on reference support.",
+          "The README specifies Snakemake <8.0 and Singularity >=3.5, and describes a mixture of environment modules and container images.",
+          "Differential methylation is not included in the checked default output targets; confirm support for that analysis with the maintainers before relying on it."
+        ],
+        "documentationUrl": "https://openomics.github.io/methyl-seek/usage/run/",
+        "sourceUrl": "https://github.com/OpenOmics/methyl-seek/blob/main/workflow/Snakefile",
+        "sources": [
+          {
+            "label": "Project overview and requirements",
+            "url": "https://github.com/OpenOmics/methyl-seek/blob/main/README.md"
+          },
+          {
+            "label": "Usage guide",
+            "url": "https://github.com/OpenOmics/methyl-seek/blob/main/docs/usage/run.md"
+          },
+          {
+            "label": "Differential methylation rules",
+            "url": "https://github.com/OpenOmics/methyl-seek/blob/main/workflow/rules/differential-methylation.smk"
+          }
+        ],
+        "reviewedOn": "2026-11-18"
+      }
+    },
+    {
+      "name": "modr",
+      "description": "Oxford Nanopore Pipeline for direct RNA-sequencing",
+      "url": "https://github.com/OpenOmics/modr",
+      "categories": [
+        "Transcriptomics"
+      ],
+      "topics": [
+        "alternative-splicing-analysis",
+        "bioinformatics",
+        "differential-expression-analysis",
+        "direct-rna-sequencing",
+        "known-transcripts",
+        "novel-transcripts",
+        "oxford-nanopore",
+        "pipeline",
+        "polya-tail-length-estimation",
+        "quality-control",
+        "rna-editing",
+        "rna-modifications",
+        "singularity",
+        "snakemake-pipeline",
+        "transcriptomics"
+      ],
+      "details": {
+        "overview": "Analyzes Oxford Nanopore direct RNA sequencing for known and novel transcript expression, poly-A tail lengths, and optional A-to-I RNA editing. It combines sequence reads with their raw signal files and sample metadata. Optional group comparisons examine differential transcript expression, transcript usage, and alternative splicing in the documented human and mouse reference workflows.",
+        "inputs": [
+          "Gzipped Oxford Nanopore FASTQ files and their corresponding FAST5 signal directories.",
+          "A TSV groups file linking samples, FAST5 directories, and group labels.",
+          "A supported human or mouse reference selection, plus an optional contrasts file."
+        ],
+        "outputs": [
+          "Known and novel transcript expression estimates.",
+          "Poly-A tail-length estimates.",
+          "Differential expression, transcript-usage, and alternative-splicing results when contrasts are supplied.",
+          "A-to-I RNA-editing results when that option is enabled."
+        ],
+        "notes": [
+          "FASTQ files alone are insufficient: the documented workflow also needs the corresponding FAST5 data.",
+          "The usage guide lists human hg38 and mouse mm10/mm39 reference choices.",
+          "Snakemake orchestrates the workflow; software dependencies use Singularity by default or an optional Conda/Mamba environment."
+        ],
+        "documentationUrl": "https://openomics.github.io/modr/usage/run/",
+        "sourceUrl": "https://github.com/OpenOmics/modr/blob/main/docs/usage/run.md",
+        "sources": [
+          {
+            "label": "Project overview and requirements",
+            "url": "https://github.com/OpenOmics/modr/blob/main/README.md"
+          }
+        ],
+        "reviewedOn": "2026-11-18"
+      }
+    },
+    {
+      "name": "metavirs",
+      "description": "Viral Metagenomics Assembly and Annotation Pipeline",
+      "url": "https://github.com/OpenOmics/metavirs",
+      "categories": [
+        "Metagenomics"
+      ],
+      "topics": [
+        "annotation",
+        "assembly",
+        "classification",
+        "pathogen-surveillance",
+        "pipeline",
+        "quality-control",
+        "singularity",
+        "snakemake",
+        "viral-metagenomics"
+      ],
+      "details": {
+        "overview": "Analyzes environmental Illumina sequencing data with a viral metagenomics workflow that combines quality control, assembly, annotation, and microbial classification. Results can be reviewed for individual samples or combined into an interactive project-level report, helping researchers examine the organisms represented in their sequencing data and inspect assembled contig annotations.",
+        "inputs": [
+          "Gzipped Illumina FASTQ files, including single-end or paired-end reads.",
+          "The reference resources required by the pipeline."
+        ],
+        "outputs": [
+          "Assembled contigs with annotations and microbial classifications.",
+          "Per-sample reports.",
+          "An optional interactive Krona report aggregating contig annotations across samples."
+        ],
+        "notes": [
+          "Single-end and paired-end samples can be supplied together, according to the usage guide.",
+          "Aggregation is optional; reports are produced per sample by default.",
+          "The README specifies Snakemake <=7.32.3 and Singularity >=3.5; execution can be local or on a SLURM cluster."
+        ],
+        "documentationUrl": "https://openomics.github.io/metavirs/usage/run/",
+        "sourceUrl": "https://github.com/OpenOmics/metavirs/blob/main/docs/usage/run.md",
+        "sources": [
+          {
+            "label": "Project overview and requirements",
+            "url": "https://github.com/OpenOmics/metavirs/blob/main/README.md"
+          }
+        ],
+        "reviewedOn": "2026-11-18"
+      }
+    },
+    {
+      "name": "nanite",
+      "description": "A streamlined Oxford Nanopore Viral Metagenomics Pipeline",
+      "url": "https://github.com/OpenOmics/nanite",
+      "categories": [
+        "Metagenomics"
+      ],
+      "topics": [
+        "annotation",
+        "assembly",
+        "classification",
+        "pathogen-surveillance",
+        "pipeline",
+        "singularity",
+        "slim",
+        "snakemake",
+        "viral-metagenomics"
+      ],
+      "details": {
+        "overview": "Processes Oxford Nanopore reads for environmental viral metagenomics, combining read-quality filtering with annotation and microbial classification. An optional assembly path uses Flye and viralFlye to assemble reads and recover candidate viral genomes. The workflow supports local or cluster execution, allowing researchers to choose whether their analysis also includes the more demanding assembly stage.",
+        "inputs": [
+          "Gzipped Oxford Nanopore FASTQ files.",
+          "The reference resources required by the pipeline."
+        ],
+        "outputs": [
+          "Read quality-control, annotation, and microbial classification results.",
+          "Assembly and viral genome-recovery results when assembly is enabled."
+        ],
+        "notes": [
+          "Assembly is disabled by default and can require substantial memory.",
+          "Multiple barcode files for one sample must follow the documented naming convention so they can be combined correctly.",
+          "The workflow uses Snakemake with Singularity by default; a Conda/Mamba option is also documented."
+        ],
+        "documentationUrl": "https://openomics.github.io/nanite/usage/run/",
+        "sourceUrl": "https://github.com/OpenOmics/nanite/blob/main/docs/usage/run.md",
+        "sources": [
+          {
+            "label": "Project overview and requirements",
+            "url": "https://github.com/OpenOmics/nanite/blob/main/README.md"
+          }
+        ],
+        "reviewedOn": "2026-11-18"
+      }
+    },
+    {
+      "name": "RNA-seek",
+      "description": "A comprehensive quality-control and quantification RNA-seq pipeline",
+      "url": "https://github.com/OpenOmics/RNA-seek",
+      "categories": [
+        "Transcriptomics"
+      ],
+      "topics": [
+        "differential-expression-analysis",
+        "gene-expression",
+        "gene-fusions",
+        "isoform-expression",
+        "quality-control",
+        "rna-seq"
+      ],
+      "details": {
+        "overview": "Processes bulk RNA-seq data from raw reads through alignment, quality control, and gene and isoform quantification. MultiQC brings together checks on sequencing quality, contamination, library complexity, and transcript integrity. Optional differential expression and gene-fusion analyses extend the workflow, providing researchers with expression measurements and quality information to assess before interpreting biological differences.",
+        "inputs": [
+          "Gzipped single-end or paired-end RNA-seq FASTQ files.",
+          "A supported reference genome or a custom reference configuration generated by the build command.",
+          "Groups and contrasts files for optional differential expression analysis."
+        ],
+        "outputs": [
+          "Gene and isoform expression quantification.",
+          "MultiQC summaries of sequencing and library quality.",
+          "Differential expression results when sample groups and contrasts are supplied.",
+          "Gene-fusion calls when enabled and compatible reference resources are available."
+        ],
+        "notes": [
+          "Single-end and paired-end datasets must be processed in separate runs and output directories.",
+          "The README specifies Snakemake <=7.32.4 and Singularity >=3.5.",
+          "Gene-fusion calling depends on the availability of the required Arriba reference files."
+        ],
+        "documentationUrl": "https://openomics.github.io/RNA-seek/RNA-seq/run/",
+        "sourceUrl": "https://github.com/OpenOmics/RNA-seek/blob/main/docs/RNA-seq/run.md",
+        "sources": [
+          {
+            "label": "Project overview and requirements",
+            "url": "https://github.com/OpenOmics/RNA-seek/blob/main/README.md"
+          }
+        ],
+        "reviewedOn": "2026-11-18"
+      }
+    },
+    {
+      "name": "chrom-seek",
+      "description": "Set of epigenetic pipelines for bulk cfChip-seq, ChIP-seq, and ATAC-seq",
+      "url": "https://github.com/OpenOmics/chrom-seek",
+      "categories": [
+        "Epigenomics"
+      ],
+      "topics": [
+        "annotation",
+        "atac-seq",
+        "bulk",
+        "cell-free-dna",
+        "chip-seq",
+        "differential-accessibility",
+        "differential-binding",
+        "peak-calling",
+        "quality-control"
+      ],
+      "details": {
+        "overview": "Processes bulk ChIP-seq, cell-free ChIP-seq, ATAC-seq, and documented CUT&RUN or CUT&Tag assays through assay-specific chromatin workflows. It combines read processing and quality control with peak analysis, using sample metadata to define groups and appropriate controls. Optional contrasts support comparisons of chromatin binding or accessibility between groups.",
+        "inputs": [
+          "Gzipped Illumina FASTQ files.",
+          "An assay selection and supported reference genome.",
+          "A peakcall TSV sample sheet, with an optional contrasts file for group comparisons."
+        ],
+        "outputs": [
+          "Peak-calling and annotation results.",
+          "Sequencing and alignment quality-control results.",
+          "Differential binding or accessibility results when contrasts are supplied."
+        ],
+        "notes": [
+          "Merge files before running the workflow and follow its sample and group naming requirements.",
+          "Input-control assignments apply to ChIP-seq; ATAC-seq samples must not supply an InputControl entry.",
+          "The README specifies Snakemake <=7.32.4 and Singularity >=3.5, and describes a mixture of environment modules and container images."
+        ],
+        "documentationUrl": "https://openomics.github.io/chrom-seek/usage/run/",
+        "sourceUrl": "https://github.com/OpenOmics/chrom-seek/blob/main/docs/usage/run.md",
+        "sources": [
+          {
+            "label": "Project overview and requirements",
+            "url": "https://github.com/OpenOmics/chrom-seek/blob/main/README.md"
+          }
+        ],
+        "reviewedOn": "2026-11-18"
+      }
+    },
+    {
+      "name": "metamorph",
+      "description": "Metagenomics and Metatranscriptomics pipeline",
+      "url": "https://github.com/OpenOmics/metamorph",
+      "categories": [
+        "Metagenomics"
+      ],
+      "topics": [
+        "metagenomics",
+        "metatranscriptomics",
+        "pipeline",
+        "quality-control",
+        "snakemake"
+      ],
+      "details": {
+        "overview": "Analyzes short-read metagenomic DNA and optional matching RNA data using selectable screening, read-based, and assembly-based workflows. Processing starts with quality control and host-read removal. Further stages support taxonomic and functional profiling or assembly and binning into metagenome-assembled genomes, giving researchers different ways to examine microbial composition and predicted functions.",
+        "inputs": [
+          "A TXT, TSV, or CSV sample sheet containing absolute paths to paired-end DNA FASTQ.GZ files.",
+          "An optional matching RNA column for metatranscriptomic data."
+        ],
+        "outputs": [
+          "Quality-control and host-read removal results, with initial taxonomic screening.",
+          "Read-based taxonomic and functional profiles when that workflow is selected.",
+          "Assembled contigs and genomic bins when assembly-based analysis is selected.",
+          "Representative metagenome-assembled genomes with classification, quantification, and predicted functional profiles."
+        ],
+        "notes": [
+          "The default pre-screen workflow does not run every analysis stage.",
+          "Select read-based, assembly-based, or combined analysis to generate the corresponding additional results.",
+          "The README specifies Snakemake and Singularity and describes a mixture of environment modules and container images."
+        ],
+        "documentationUrl": "https://openomics.github.io/metamorph/usage/run/",
+        "sourceUrl": "https://github.com/OpenOmics/metamorph/blob/main/docs/usage/run.md",
+        "sources": [
+          {
+            "label": "Project overview and requirements",
+            "url": "https://github.com/OpenOmics/metamorph/blob/main/README.md"
+          }
+        ],
+        "reviewedOn": "2026-11-18"
+      }
+    },
+    {
+      "name": "baseline",
+      "description": "A reusable template for developing workflows and their documentation.",
+      "url": "https://github.com/OpenOmics/baseline",
+      "categories": [
+        "Utilities"
+      ],
+      "topics": [
+        "documentation-template",
+        "pipeline-template",
+        "singularity",
+        "snakemake"
+      ],
+      "details": {
+        "overview": "Provides a reusable starting structure for developing an OpenOmics pipeline. It includes a common command-line pattern, documentation scaffolding, workflow orchestration, and guidance for renaming the template. Developers adapt its placeholders and analysis rules to their own project; the repository is a development template rather than a defined assay-analysis workflow.",
+        "inputs": [
+          "A project name and project-specific workflow rules, configuration, and reference requirements."
+        ],
+        "outputs": [
+          "A customizable pipeline and documentation scaffold; biological results depend on the workflow added by the developer."
+        ],
+        "notes": [
+          "The README contains template placeholders that must be replaced for a new pipeline.",
+          "Assay-specific inputs, biological outputs, and result formats are not defined by the template documentation.",
+          "The README specifies Snakemake <=7.32.4 and Singularity >=3.5."
+        ],
+        "documentationUrl": "https://github.com/OpenOmics/baseline/blob/main/README.md",
+        "sourceUrl": "https://github.com/OpenOmics/baseline/blob/main/README.md",
+        "reviewedOn": "2026-11-18",
+        "status": "template"
+      }
+    },
+    {
+      "name": "cfChIP-seek",
+      "description": "Archived cell-free ChIP-seq workflow; superseded by chrom-seek.",
+      "url": "https://github.com/OpenOmics/cfChIP-seek",
+      "categories": [
+        "Archived"
+      ],
+      "topics": [
+        "cell-free-dna",
+        "cell-type-deconvolution",
+        "chip-seq",
+        "peak-annotation",
+        "peak-calling",
+        "quality-control",
+        "snakemake"
+      ],
+      "details": {
+        "overview": "An archived workflow for analyzing cell-free ChIP-seq data, organized around ChIP/input sample pairs and comparisons between sample groups. Its documentation describes peak-calling setup and differential-binding contrasts. The maintainers now direct users to chrom-seek and state that cfChIP-seek will receive no further updates.",
+        "inputs": [
+          "Paired-end, gzipped FASTQ files from cell-free ChIP-seq experiments.",
+          "A peakcall TSV pairing ChIP and input samples and assigning groups.",
+          "An optional contrasts TSV defining comparisons between groups."
+        ],
+        "outputs": [
+          "Peak-calling results configured from ChIP/input sample pairs.",
+          "Differential-binding comparisons when group contrasts are supplied."
+        ],
+        "notes": [
+          "Archived: the README explicitly recommends using OpenOmics/chrom-seek instead.",
+          "The run guide excludes single-end data.",
+          "The archived README lists Snakemake 6.0 or later and Singularity 3.5 or later."
+        ],
+        "documentationUrl": "https://openomics.github.io/cfChIP-seek/",
+        "sourceUrl": "https://github.com/OpenOmics/cfChIP-seek/blob/main/README.md",
+        "sources": [
+          {
+            "label": "Repository README",
+            "url": "https://github.com/OpenOmics/cfChIP-seek/blob/main/README.md"
+          },
+          {
+            "label": "Run documentation",
+            "url": "https://github.com/OpenOmics/cfChIP-seek/blob/main/docs/usage/run.md"
+          }
+        ],
+        "reviewedOn": "2026-11-18",
+        "status": "archived"
+      }
+    },
+    {
+      "name": "assembly-seek",
+      "description": "De novo Long-read Genome Assembly Pipeline",
+      "url": "https://github.com/OpenOmics/assembly-seek",
+      "categories": [
+        "Genomics"
+      ],
+      "topics": [
+        "genome-assembly",
+        "long-read-sequencing",
+        "pacbio"
+      ],
+      "details": {
+        "overview": "Builds de novo genome assemblies from PacBio HiFi consensus reads using selectable Flye, Raven, and hifiasm workflows. Snakemake coordinates assembly and quality control, while BUSCO assesses assemblies against a selected or automatically chosen lineage. The workflow is intended for projects constructing genomes from long-read sequencing data.",
+        "inputs": [
+          "PacBio HiFi CCS reads in gzipped FASTQ or BAM files."
+        ],
+        "outputs": [
+          "Genome assemblies from the selected Flye, Raven, or hifiasm workflows.",
+          "BUSCO assembly assessments using a specified or automatically selected lineage."
+        ],
+        "notes": [
+          "The README lists Snakemake 6.0 or later and Singularity 3.5 or later.",
+          "For Flye, the documented genome-size and coverage options must be supplied together when used.",
+          "A requested BUSCO lineage database is downloaded into the output directory if it is not available locally."
+        ],
+        "documentationUrl": "https://openomics.github.io/assembly-seek/",
+        "sourceUrl": "https://github.com/OpenOmics/assembly-seek/blob/main/README.md",
+        "sources": [
+          {
+            "label": "Repository README",
+            "url": "https://github.com/OpenOmics/assembly-seek/blob/main/README.md"
+          },
+          {
+            "label": "Run documentation",
+            "url": "https://github.com/OpenOmics/assembly-seek/blob/main/docs/usage/run.md"
+          }
+        ],
+        "reviewedOn": "2026-11-18"
+      }
+    },
+    {
+      "name": "parabricks-benchmark",
+      "description": "Benchmarking parabricks GPU-accelerated tools for GATK and beyond!",
+      "url": "https://github.com/OpenOmics/parabricks-benchmark",
+      "categories": [
+        "Archived"
+      ],
+      "topics": [
+        "benchmarking",
+        "deepvariant",
+        "gatk",
+        "germline-variants",
+        "gpu-acceleration"
+      ],
+      "details": {
+        "overview": "Compares Parabricks GPU-accelerated genomics tools with the conventional tools they were based on. The documented benchmark includes a GATK germline workflow tested with Genome in a Bottle samples HG002, HG003, and HG004. Snakemake coordinates the processing steps and containerized software for these computational comparisons.",
+        "inputs": [
+          "Paired-end, gzipped Illumina FASTQ files.",
+          "Reference resources prepared through the documented installation workflow."
+        ],
+        "outputs": [
+          "Benchmark comparison results in the selected output directory; the reviewed README and run guide do not enumerate report formats or individual result files."
+        ],
+        "notes": [
+          "The README requires Snakemake below version 8.0 and Singularity 3.5 or later.",
+          "The workflow uses the official Parabricks container; check the repository’s GPU and environment configuration before running.",
+          "The run guide excludes single-end input data."
+        ],
+        "documentationUrl": "https://openomics.github.io/parabricks-benchmark/",
+        "sourceUrl": "https://github.com/OpenOmics/parabricks-benchmark/blob/main/README.md",
+        "sources": [
+          {
+            "label": "Repository README",
+            "url": "https://github.com/OpenOmics/parabricks-benchmark/blob/main/README.md"
+          },
+          {
+            "label": "Run documentation",
+            "url": "https://github.com/OpenOmics/parabricks-benchmark/blob/main/docs/usage/run.md"
+          }
+        ],
+        "reviewedOn": "2026-11-18",
+        "status": "archived"
+      }
+    },
+    {
+      "name": "cell-seek",
+      "description": "Single-cell workflows for RNA, ATAC, CITE, and VDJ analysis.",
+      "url": "https://github.com/OpenOmics/cell-seek",
+      "categories": [
+        "Single cell",
+        "Transcriptomics",
+        "Epigenomics"
+      ],
+      "topics": [
+        "10xgenomics",
+        "single-cell-atac-seq",
+        "single-cell-cite-seq",
+        "single-cell-omics",
+        "single-cell-rna-seq",
+        "single-cell-vdj"
+      ],
+      "details": {
+        "overview": "A collection of workflows for single-cell gene expression, V(D)J, CITE-seq, ATAC, and combined ATAC/gene-expression multiome data. It supports Cell Ranger processing and assay-specific downstream analysis. The GEX workflow can also use existing Cell Ranger outputs, producing Seurat objects and quality-control reports for further exploration.",
+        "inputs": [
+          "Single-cell FASTQ files and the configuration for the chosen assay and reference genome.",
+          "Existing Cell Ranger sample output folders for GEX downstream analysis.",
+          "A Seurat RDS object when building a ShinyCell2 application."
+        ],
+        "outputs": [
+          "Assay-specific processing results; deliverables depend on the selected workflow.",
+          "For GEX: Seurat objects and HTML sample/project quality-control reports.",
+          "Optional GEX BAM files.",
+          "An interactive ShinyCell2 application when that workflow is selected."
+        ],
+        "notes": [
+          "For sequencing workflows, select the appropriate assay, reference genome, and supported Cell Ranger version; additional metadata requirements vary by assay.",
+          "Existing Cell Ranger GEX inputs must retain their normal directory structure, including the outs folder.",
+          "GEX BAM generation is disabled by default and must be requested explicitly."
+        ],
+        "documentationUrl": "https://openomics.github.io/cell-seek/",
+        "sourceUrl": "https://github.com/OpenOmics/cell-seek/blob/main/README.md",
+        "sources": [
+          {
+            "label": "Repository README",
+            "url": "https://github.com/OpenOmics/cell-seek/blob/main/README.md"
+          },
+          {
+            "label": "Run documentation",
+            "url": "https://github.com/OpenOmics/cell-seek/blob/main/docs/usage/run.md"
+          },
+          {
+            "label": "GEX workflow documentation",
+            "url": "https://github.com/OpenOmics/cell-seek/blob/main/docs/usage/gex.md"
+          }
+        ],
+        "reviewedOn": "2026-11-18"
+      }
+    },
+    {
+      "name": "mir-seek",
+      "description": "MicroRNA-sequencing pipeline",
+      "url": "https://github.com/OpenOmics/mir-seek",
+      "categories": [
+        "Transcriptomics"
+      ],
+      "topics": [
+        "mature-mirna",
+        "micro-rna",
+        "micro-rna-expression",
+        "mirdeep2",
+        "mirna",
+        "mirna-seq",
+        "singularity",
+        "snakemake"
+      ],
+      "details": {
+        "overview": "Processes microRNA sequencing data to estimate expression and perform quality control. It accepts single-end Illumina reads and uses the selected reference genome for alignment and annotation. An optional two-pass miRDeep2 analysis identifies novel microRNAs across samples, then quantifies their expression in a counts matrix.",
+        "inputs": [
+          "Single-end, gzipped Illumina FASTQ files.",
+          "The supported hg38 or mm10 reference configuration for alignment and annotation."
+        ],
+        "outputs": [
+          "MicroRNA expression estimates and processing/quality-control results.",
+          "An optional counts matrix for newly identified microRNAs."
+        ],
+        "notes": [
+          "Paired-end input is not supported by the documented workflow.",
+          "The README requires Snakemake 6.0 or later but below 8.0, plus Singularity 3.5 or later.",
+          "Novel microRNA identification is optional and increases runtime."
+        ],
+        "documentationUrl": "https://openomics.github.io/mir-seek/",
+        "sourceUrl": "https://github.com/OpenOmics/mir-seek/blob/main/README.md",
+        "sources": [
+          {
+            "label": "Repository README",
+            "url": "https://github.com/OpenOmics/mir-seek/blob/main/README.md"
+          },
+          {
+            "label": "Run documentation",
+            "url": "https://github.com/OpenOmics/mir-seek/blob/main/docs/usage/run.md"
+          }
+        ],
+        "reviewedOn": "2026-11-18"
+      }
+    },
+    {
+      "name": "mr-seek",
+      "description": "Mendelian Randomization pipeline",
+      "url": "https://github.com/OpenOmics/mr-seek",
+      "categories": [
+        "Genomics"
+      ],
+      "topics": [
+        "mendelian-randomization",
+        "pipeline",
+        "snakemake"
+      ],
+      "details": {
+        "overview": "Runs Mendelian randomization analyses using exposure QTL data or database phenotype lists together with selected outcomes. The workflow supports IEU GWAS data and documented PAN-UK Biobank resources, with options for population selection and exposure clumping. It organizes data preparation and analysis for studying relationships between exposures and outcomes.",
+        "inputs": [
+          "Exposure QTL files in a supported schema, or a list of database exposure phenotypes.",
+          "An outcome phenotype list or keyword list.",
+          "The selected IEU or Neale/PAN-UK Biobank data source."
+        ],
+        "outputs": [
+          "Mendelian-randomization analysis results in the selected output directory; individual result and report formats are not enumerated in the reviewed README or run guide."
+        ],
+        "notes": [
+          "QTL files must use the documented pqtl or template1 format; the outcome input currently supports one list file at a time.",
+          "The Neale option described in the run guide uses PAN-UK Biobank data hosted on Biowulf.",
+          "The README lists Singularity 3.5 or later and Snakemake 7.32.4 or earlier."
+        ],
+        "documentationUrl": "https://openomics.github.io/mr-seek/",
+        "sourceUrl": "https://github.com/OpenOmics/mr-seek/blob/main/README.md",
+        "sources": [
+          {
+            "label": "Repository README",
+            "url": "https://github.com/OpenOmics/mr-seek/blob/main/README.md"
+          },
+          {
+            "label": "Run documentation",
+            "url": "https://github.com/OpenOmics/mr-seek/blob/main/docs/usage/run.md"
+          }
+        ],
+        "reviewedOn": "2026-11-18"
+      }
+    },
+    {
+      "name": "cyte-seek",
+      "description": "Single-cell CITE-sequencing Pipeline",
+      "url": "https://github.com/OpenOmics/cyte-seek",
+      "categories": [
+        "Archived"
+      ],
+      "topics": [
+        "10xgenomics",
+        "cite-seq",
+        "pipeline",
+        "quality-control",
+        "single-cell",
+        "singularity"
+      ],
+      "details": {
+        "overview": "Analyzes 10x single-cell CITE-seq data from FASTQ files through Cell Ranger processing, cell filtering, normalization, clustering, differential expression, and cell-type prediction. It also integrates samples for project-level analyses. When genotype information is supplied, the documented demuxlet option supports assigning pooled cells to their source individuals.",
+        "inputs": [
+          "Paired-end, gzipped FASTQ files from the supported 10x workflow.",
+          "Library and feature-barcode CSV files describing the samples and captured features.",
+          "An optional genotype VCF and sample/patient mapping for demuxlet analysis."
+        ],
+        "outputs": [
+          "Filtered and normalized single-cell data.",
+          "Sample-level and integrated project-level clustering results.",
+          "Differential-expression results and predicted cell types.",
+          "Optional genotype-based demultiplexing results."
+        ],
+        "notes": [
+          "The run guide lists hg38 as available and marks mm10 as forthcoming; verify reference support for your dataset.",
+          "The demuxlet option requires a genotype VCF.",
+          "The README lists Snakemake 6.0 or later and Singularity 3.5 or later."
+        ],
+        "documentationUrl": "https://openomics.github.io/cyte-seek/",
+        "sourceUrl": "https://github.com/OpenOmics/cyte-seek/blob/main/README.md",
+        "sources": [
+          {
+            "label": "Repository README",
+            "url": "https://github.com/OpenOmics/cyte-seek/blob/main/README.md"
+          },
+          {
+            "label": "Run documentation",
+            "url": "https://github.com/OpenOmics/cyte-seek/blob/main/docs/usage/run.md"
+          }
+        ],
+        "reviewedOn": "2026-11-18",
+        "status": "archived"
+      }
+    },
+    {
+      "name": "istari",
+      "description": "Data preparation and validation for whole-genome regression modeling.",
+      "url": "https://github.com/OpenOmics/istari",
+      "categories": [
+        "Genomics"
+      ],
+      "topics": [
+        "covariate-validation",
+        "gwas-preparation",
+        "phenotype-validation",
+        "qc-filtering",
+        "variant-annotation"
+      ],
+      "details": {
+        "overview": "Prepares whole-exome and whole-genome datasets for genome-wide association and gene-based analyses with regenie. It validates phenotype and covariate tables, annotates and filters variants, and creates files for regenie’s preparation and testing stages. Somalier can supply sex and ancestry covariates when those fields are missing.",
+        "inputs": [
+          "A gVCF file with its corresponding index.",
+          "A phenotype file.",
+          "A covariates file."
+        ],
+        "outputs": [
+          "Prepared phenotype and covariate data, with inferred sex and ancestry information when required.",
+          "Annotated and filtered variant datasets.",
+          "Genotype data prepared for regenie step 1.",
+          "Annotation, mask, and list files for regenie step 2 gene-based tests."
+        ],
+        "notes": [
+          "The README specifies Singularity 3.10.5 and Snakemake 7.19.1.",
+          "Variant-frequency, missingness, and pruning settings are configurable and should be reviewed for the study.",
+          "The documented outputs support preparation for regenie steps 1 and 2."
+        ],
+        "documentationUrl": "https://openomics.github.io/istari/",
+        "sourceUrl": "https://github.com/OpenOmics/istari/blob/main/README.md",
+        "sources": [
+          {
+            "label": "Repository README",
+            "url": "https://github.com/OpenOmics/istari/blob/main/README.md"
+          }
+        ],
+        "reviewedOn": "2026-11-18"
+      }
+    },
+    {
+      "name": "mpox-seek",
+      "description": "A rapid pipeline for targeted and whole-genome ONT monkeypox sequencing",
+      "url": "https://github.com/OpenOmics/mpox-seek",
+      "categories": [
+        "Genomics",
+        "Metagenomics"
+      ],
+      "topics": [
+        "mamba",
+        "monkeypox",
+        "oxford-nanopore",
+        "phylogenetics",
+        "pipeline",
+        "rapid",
+        "singularity",
+        "snakemake",
+        "viral-genomics"
+      ],
+      "details": {
+        "overview": "Processes Oxford Nanopore data from targeted or whole-genome mpox sequencing projects. The workflow aligns, collapses, and visualizes sequencing data through a coordinated set of processing and quality-control stages. It is intended for computational analysis of sequencing samples, with local and cluster execution described in the repository.",
+        "inputs": [
+          "Oxford Nanopore FASTQ files from targeted or whole-genome sequencing."
+        ],
+        "outputs": [
+          "Alignment and visualization results for the input sequencing samples.",
+          "Processing and quality-control results; the README does not enumerate final output formats or report filenames."
+        ],
+        "notes": [
+          "The README requires Snakemake below version 8.0, with Conda/Mamba or Singularity for software dependencies.",
+          "Windows use is documented through Windows Subsystem for Linux.",
+          "Consult the repository’s setup and usage documentation for reference resources and supported configuration."
+        ],
+        "documentationUrl": "https://openomics.github.io/mpox-seek/",
+        "sourceUrl": "https://github.com/OpenOmics/mpox-seek/blob/main/README.md",
+        "sources": [
+          {
+            "label": "Repository README",
+            "url": "https://github.com/OpenOmics/mpox-seek/blob/main/README.md"
+          }
+        ],
+        "reviewedOn": "2026-11-18"
+      }
+    },
+    {
+      "name": "pbAmp-seek",
+      "description": "Identify and count PacBio Hifi amplicons",
+      "url": "https://github.com/OpenOmics/pbAmp-seek",
+      "categories": [
+        "Genomics"
+      ],
+      "topics": [
+        "amplicon-sequencing",
+        "pacbio",
+        "snakemake-pipeline"
+      ],
+      "details": {
+        "overview": "pbAmp-seek identifies and counts PacBio HiFi amplicons against a supplied reference. Its workflow clusters reads with pbAA, aligns consensus sequences to the reference, maps HiFi reads back to those consensuses, and summarizes read support. It also includes variant-calling steps for examining sequence differences within a targeted amplicon experiment.",
+        "inputs": [
+          "PacBio HiFi reads in FASTQ format.",
+          "An amplicon reference FASTA; multiple reference sequences belong in one file."
+        ],
+        "outputs": [
+          "Clustered consensus sequences in FASTA format.",
+          "Consensus-to-reference and HiFi-to-consensus BAM alignments.",
+          "Variant-calling outputs in BCF and VCF formats.",
+          "Per-sample read statistics and summary CSV files."
+        ],
+        "notes": [
+          "Requires the documented Snakemake/Singularity environment, Conda or Mamba, and the environment modules used by the workflow.",
+          "The run guide contains a reference-option typo; the synopsis and example use --ref-fasta. Check the installed command’s help before running."
+        ],
+        "documentationUrl": "https://github.com/OpenOmics/pbAmp-seek/blob/main/docs/usage/run.md",
+        "sourceUrl": "https://github.com/OpenOmics/pbAmp-seek/blob/f9a01154fdca1559d35755d520afebd00ed43fad/workflow/Snakefile",
+        "reviewedOn": "2026-11-18",
+        "sources": [
+          {
+            "label": "README",
+            "url": "https://github.com/OpenOmics/pbAmp-seek/blob/f9a01154fdca1559d35755d520afebd00ed43fad/README.md"
+          },
+          {
+            "label": "Run guide",
+            "url": "https://github.com/OpenOmics/pbAmp-seek/blob/f9a01154fdca1559d35755d520afebd00ed43fad/docs/usage/run.md"
+          },
+          {
+            "label": "Workflow outputs",
+            "url": "https://github.com/OpenOmics/pbAmp-seek/blob/f9a01154fdca1559d35755d520afebd00ed43fad/workflow/Snakefile"
+          }
+        ]
+      }
+    },
+    {
+      "name": "leafworker",
+      "description": "Alternative-splicing pipeline that runs leafcutter and IsoformSwitchAnalyzeR.",
+      "url": "https://github.com/OpenOmics/leafworker",
+      "categories": [
+        "Transcriptomics"
+      ],
+      "topics": [
+        "alternative-splicing",
+        "covariate-correction",
+        "differential-analysis",
+        "isoform-quantification",
+        "isoform-switches"
+      ],
+      "details": {
+        "overview": "leafworker wraps LeafCutter and IsoformSwitchAnalyzeR for alternative-splicing research. Starting from RNA-seq alignments and transcript annotations, it supports splice-junction analysis and comparisons between sample groups. Optional transcript quantification adds Salmon estimates and, when matching group and contrast files are supplied, isoform-switch analysis to the same workflow.",
+        "inputs": [
+          "RNA-seq BAM files and a transcript annotation GTF.",
+          "Optional sample-group and contrast TSV files for differential analysis.",
+          "Optional transcript FASTA matching the GTF for Salmon quantification and isoform-switch analysis."
+        ],
+        "outputs": [
+          "Per-sample splice-junction files and clustered LeafCutter junction counts.",
+          "Differential-splicing significance tables and LeafViz R data when contrasts are defined.",
+          "Salmon transcript estimates, raw-count matrices, and TPM matrices when transcript FASTA is provided.",
+          "Isoform-switch tables and selected transcript FASTA files when quantification and contrasts are configured."
+        ],
+        "notes": [
+          "The README specifies Singularity and Snakemake no newer than 7.32.4; use the repository’s version requirements.",
+          "Transcript FASTA, GTF, and BAM reference genome must correspond to one another.",
+          "Use a unique batch identifier when changing groups or covariates to avoid overwriting prior differential-splicing results."
+        ],
+        "documentationUrl": "https://github.com/OpenOmics/leafworker/blob/main/docs/usage/run.md",
+        "sourceUrl": "https://github.com/OpenOmics/leafworker/blob/05ba1737d57351f153cd1234cb068d4b5deaace0/docs/usage/run.md",
+        "reviewedOn": "2026-11-18",
+        "sources": [
+          {
+            "label": "README",
+            "url": "https://github.com/OpenOmics/leafworker/blob/05ba1737d57351f153cd1234cb068d4b5deaace0/README.md"
+          },
+          {
+            "label": "Inputs and analysis options",
+            "url": "https://github.com/OpenOmics/leafworker/blob/05ba1737d57351f153cd1234cb068d4b5deaace0/docs/usage/run.md"
+          },
+          {
+            "label": "Declared workflow outputs",
+            "url": "https://github.com/OpenOmics/leafworker/blob/05ba1737d57351f153cd1234cb068d4b5deaace0/workflow/Snakefile"
+          }
+        ]
+      }
+    },
+    {
+      "name": "space-seek",
+      "description": "Spatial sequencing workflow for 10x Visium data.",
+      "url": "https://github.com/OpenOmics/space-seek",
+      "categories": [
+        "Single cell"
+      ],
+      "topics": [
+        "10xgenomics",
+        "pipeline",
+        "single-cell",
+        "singularity",
+        "snakemake",
+        "visium-hd"
+      ],
+      "details": {
+        "overview": "space-seek processes 10x Genomics Visium spatial gene-expression libraries with Space Ranger. It connects sequencing reads, sample metadata, tissue-image information, and assay-specific references to generate spatial expression results and quality summaries. The current command distinguishes Visium HD, HD 3′, CytAssist, and fresh-frozen workflows, with reference choices tied to the selected assay.",
+        "inputs": [
+          "Paired-end Visium FASTQ data.",
+          "A CSV sample sheet mapping samples to FASTQ paths, CytAssist images, slide identifiers, and capture areas.",
+          "An assay and compatible genome reference; optional tissue-image fields depend on the experiment."
+        ],
+        "outputs": [
+          "Space Ranger spatial gene-expression results, described by the workflow as a spot-by-gene expression matrix.",
+          "Per-sample interactive web_summary.html reports.",
+          "Per-sample metrics_summary.csv files.",
+          "Optional BAM creation when explicitly enabled."
+        ],
+        "notes": [
+          "Requires the repository’s Snakemake/Singularity environment and assay-compatible references or probe sets.",
+          "The generic run guide omits current sample-sheet and assay requirements; follow the current command help and workflow configuration.",
+          "The command rejects the mm39_2024 and visium_cytassist combination because no probe set is configured for it."
+        ],
+        "documentationUrl": "https://github.com/OpenOmics/space-seek#readme",
+        "sourceUrl": "https://github.com/OpenOmics/space-seek/blob/63e9b12a922af778f18c454350155e6b6f496f1d/space-seek",
+        "reviewedOn": "2026-11-18",
+        "sources": [
+          {
+            "label": "README",
+            "url": "https://github.com/OpenOmics/space-seek/blob/63e9b12a922af778f18c454350155e6b6f496f1d/README.md"
+          },
+          {
+            "label": "Current command options",
+            "url": "https://github.com/OpenOmics/space-seek/blob/63e9b12a922af778f18c454350155e6b6f496f1d/space-seek"
+          },
+          {
+            "label": "Space Ranger workflow",
+            "url": "https://github.com/OpenOmics/space-seek/blob/63e9b12a922af778f18c454350155e6b6f496f1d/workflow/rules/gex.smk"
+          },
+          {
+            "label": "Workflow configuration",
+            "url": "https://github.com/OpenOmics/space-seek/blob/63e9b12a922af778f18c454350155e6b6f496f1d/workflow/Snakefile"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ervx",
+      "description": "Endogenous retrovirus expression workflow for human and mouse bulk RNA-seq.",
+      "url": "https://github.com/OpenOmics/ervx",
+      "categories": [
+        "Transcriptomics"
+      ],
+      "topics": [
+        "endogenous-retrovirus-expression",
+        "herv",
+        "human",
+        "mouse",
+        "pipeline",
+        "quality-control",
+        "singularity",
+        "snakemake",
+        "transposable-elements",
+        "workflow"
+      ],
+      "details": {
+        "overview": "ervx characterizes endogenous retrovirus expression from bulk RNA-seq in human and mouse. Its workflow combines read quality checks and alignment with Telescope-based element quantification, while retaining gene and isoform expression summaries. Researchers can use these outputs to study retroviral-element activity across samples alongside conventional bulk transcriptome measurements.",
+        "inputs": [
+          "Paired-end Illumina RNA-seq FASTQ files, compressed with gzip.",
+          "A configured human or mouse genome reference and the required element annotations."
+        ],
+        "outputs": [
+          "Per-sample Telescope element-count TSV files and a merged counts CSV.",
+          "Subfamily-summed counts when the required family annotation is configured.",
+          "RSEM gene and isoform expression results.",
+          "Alignment files, coverage tracks, and a combined MultiQC report."
+        ],
+        "notes": [
+          "The reviewed README and run guide document human and mouse references; they do not establish macaque support.",
+          "The run guide does not support single-end input; verify the reference selection and library preparation before running.",
+          "Requires Snakemake, Singularity, and configured references; cache, temporary, and shared-resource paths depend on the computing environment."
+        ],
+        "documentationUrl": "https://github.com/OpenOmics/ervx/blob/main/docs/usage/run.md",
+        "sourceUrl": "https://github.com/OpenOmics/ervx/blob/9e0dc7e827bcf9bf5e76cd9f8df6f616223fd3cb/workflow/Snakefile",
+        "reviewedOn": "2026-11-18",
+        "sources": [
+          {
+            "label": "README",
+            "url": "https://github.com/OpenOmics/ervx/blob/9e0dc7e827bcf9bf5e76cd9f8df6f616223fd3cb/README.md"
+          },
+          {
+            "label": "Inputs and execution",
+            "url": "https://github.com/OpenOmics/ervx/blob/9e0dc7e827bcf9bf5e76cd9f8df6f616223fd3cb/docs/usage/run.md"
+          },
+          {
+            "label": "Declared workflow outputs",
+            "url": "https://github.com/OpenOmics/ervx/blob/9e0dc7e827bcf9bf5e76cd9f8df6f616223fd3cb/workflow/Snakefile"
+          }
+        ]
+      }
+    },
+    {
+      "name": "scErvx",
+      "description": "Endogenous Retrovirus Expression Pipeline for Human and Mouse for use with data from 10x genomics (bam files)",
+      "url": "https://github.com/OpenOmics/scErvx",
+      "categories": [
+        "Single cell"
+      ],
+      "topics": [
+        "endogenous-retrovirus-expression",
+        "single-cell-rna-seq"
+      ],
+      "details": {
+        "overview": "scErvx examines endogenous retrovirus and transposable-element expression in 10x Genomics single-cell RNA-seq data. The implemented workflow runs SoloTE and scTE on BAM files, creating expression outputs organized by cells and elements. These outputs provide a starting point for downstream research into repetitive-element activity within single-cell datasets.",
+        "inputs": [
+          "10x Genomics single-cell RNA-seq BAM files, as used by the workflow and run examples.",
+          "Configured transposable-element annotations for SoloTE and genome indexes for scTE."
+        ],
+        "outputs": [
+          "Per-sample SoloTE matrix.mtx, features.tsv, and barcodes.tsv files.",
+          "Per-sample scTE expression CSV files."
+        ],
+        "notes": [
+          "The README contains unfinished template text and generic FASTQ wording; its run examples and workflow use BAM inputs.",
+          "Check that BAM files contain the cell-barcode and UMI tags expected by the workflow; scTE is invoked with CB and UB.",
+          "Requires the configured Snakemake/Singularity environment, containers, and reference resources."
+        ],
+        "documentationUrl": "https://github.com/OpenOmics/scErvx#readme",
+        "sourceUrl": "https://github.com/OpenOmics/scErvx/blob/eb0d07f4fc8f185930a1dbf4476e5e94f8f36886/workflow/Snakefile",
+        "reviewedOn": "2026-11-18",
+        "sources": [
+          {
+            "label": "README and BAM examples",
+            "url": "https://github.com/OpenOmics/scErvx/blob/eb0d07f4fc8f185930a1dbf4476e5e94f8f36886/README.md"
+          },
+          {
+            "label": "Implemented input and outputs",
+            "url": "https://github.com/OpenOmics/scErvx/blob/eb0d07f4fc8f185930a1dbf4476e5e94f8f36886/workflow/Snakefile"
+          }
+        ]
+      }
+    },
+    {
+      "name": "weave",
+      "description": "BCL demultiplexing and FastQ quality-control pipeline",
+      "url": "https://github.com/OpenOmics/weave",
+      "categories": [
+        "Genomics"
+      ],
+      "topics": [
+        "bcl2fastq",
+        "bclconvert",
+        "contamination-screening",
+        "disambiguate-genomes",
+        "fastp",
+        "fastq-quality-control",
+        "kaiju",
+        "kraken2",
+        "krona"
+      ],
+      "details": {
+        "overview": "weave prepares incoming Illumina sequencing runs for downstream analysis by combining demultiplexing with read-quality assessment. It separates reads into sample FASTQ files, then runs quality and taxonomic-screening tools and gathers their metrics into a MultiQC report. The workflow is useful for assessing a sequencing delivery before committing to an analysis-specific pipeline.",
+        "inputs": [
+          "One or more Illumina run identifiers or run directories containing the sequencing-run artifacts."
+        ],
+        "outputs": [
+          "Demultiplexed, compressed FASTQ files separated by sample.",
+          "Tool-specific sequence-quality and taxonomic-screening results.",
+          "A MultiQC report combining the quality-assessment metrics."
+        ],
+        "notes": [
+          "Requires Singularity, Snakemake, and the Python dependencies listed by the repository.",
+          "The run guide names MiSeq, NextSeq, and HiSeq run artifacts; verify compatibility before using another instrument’s run layout.",
+          "Nonstandard computing environments may require explicit sequencing-directory and configuration settings."
+        ],
+        "documentationUrl": "https://github.com/OpenOmics/weave/blob/main/docs/usage/run.md",
+        "sourceUrl": "https://github.com/OpenOmics/weave/blob/3d117f0ad0d95cc914c8c1c30b124eeecf7ae4af/docs/usage/run.md",
+        "reviewedOn": "2026-11-18",
+        "sources": [
+          {
+            "label": "README and QC tools",
+            "url": "https://github.com/OpenOmics/weave/blob/3d117f0ad0d95cc914c8c1c30b124eeecf7ae4af/README.md"
+          },
+          {
+            "label": "Run inputs and output reports",
+            "url": "https://github.com/OpenOmics/weave/blob/3d117f0ad0d95cc914c8c1c30b124eeecf7ae4af/docs/usage/run.md"
+          }
+        ]
+      }
+    },
+    {
+      "name": "fragmentomics",
+      "description": "A pipeline analyzing fragmentomics profile of cfDNA sequencing data",
+      "url": "https://github.com/OpenOmics/fragmentomics",
+      "categories": [
+        "Genomics"
+      ],
+      "topics": [
+        "cell-free-dna",
+        "cfdna-profiling",
+        "fragment-features",
+        "fragmentomics"
+      ],
+      "details": {
+        "overview": "Measures fragmentation patterns in cell-free DNA sequencing data. The workflow uses FinaleToolkit to characterize fragment sizes, genomic coverage, end motifs, protection scores, short-to-long fragment ratios, and cleavage profiles. It prepares sequencing reads or existing alignments for these analyses, producing features for downstream research into cfDNA biology and biomarker discovery.",
+        "inputs": [
+          "Paired-end Illumina FASTQ files or BAM alignments, using only one input format per run.",
+          "A selected genome build and its reference files; the run guide also describes custom genome JSON configurations."
+        ],
+        "outputs": [
+          "Fragment-length distributions and genomic coverage.",
+          "Fragment-end motif frequencies and motif diversity scores.",
+          "Window protection scores and GC-corrected DELFI short-to-long fragment ratios.",
+          "Cleavage profiles and, when explicitly enabled, cfDNAanalyzer feature matrices."
+        ],
+        "notes": [
+          "Single-end FASTQ input is not supported; supplied BAM alignments are checked against the selected reference build.",
+          "Optional cfDNAanalyzer processing extracts features only; it does not train classifiers or assign sample classes or probabilities.",
+          "Review the repository's Snakemake and Singularity requirements and reference-file setup before running."
+        ],
+        "documentationUrl": "https://openomics.github.io/fragmentomics/usage/run/",
+        "sourceUrl": "https://github.com/OpenOmics/fragmentomics/blob/9d12c930e8b322e270e9046a991b70e718e64c62/docs/usage/run.md",
+        "reviewedOn": "2026-11-18",
+        "sources": [
+          {
+            "label": "Run guide",
+            "url": "https://github.com/OpenOmics/fragmentomics/blob/9d12c930e8b322e270e9046a991b70e718e64c62/docs/usage/run.md"
+          },
+          {
+            "label": "Overview",
+            "url": "https://github.com/OpenOmics/fragmentomics/blob/9d12c930e8b322e270e9046a991b70e718e64c62/README.md"
+          }
+        ]
+      }
+    },
+    {
+      "name": "HiIP",
+      "description": "Hi-C + ChIP (HiChIP) sequencing pipeline.",
+      "url": "https://github.com/OpenOmics/HiIP",
+      "categories": [
+        "Epigenomics"
+      ],
+      "topics": [
+        "chip-seq",
+        "hi-c",
+        "hichip",
+        "pipeline",
+        "singularity",
+        "snakemake"
+      ],
+      "details": {
+        "overview": "Processes restriction-enzyme-free HiChIP data generated using DNase or MNase digestion. The documentation describes alignment and contact-map analysis, with chromatin-loop and topologically associating domain identification among its stated goals. The run guide combines paired-end sequencing reads with a reference genome and ChIP-seq peaks, and provides a specific analysis option for CTCF or cohesin immunoprecipitation.",
+        "inputs": [
+          "Gzipped paired-end Illumina FASTQ files from restriction-enzyme-free HiChIP experiments.",
+          "A reference genome selection: hg38 or mm10 in the documented run interface.",
+          "ChIP-seq peak calls in BED, narrowPeak, or broadPeak format."
+        ],
+        "outputs": [
+          "Contact-map and chromatin-loop analysis are described in the documentation; the reviewed pages do not enumerate result file formats.",
+          "Topologically associating domain identification is a stated project goal, rather than a documented output contract."
+        ],
+        "notes": [
+          "Single-end sequencing is not supported by the documented run interface.",
+          "The CTCF option is intended for CTCF or cohesin immunoprecipitation, not enhancer or active-promoter marks such as H3K27ac or H3K4me3.",
+          "The root README contains template placeholders; consult the project-specific documentation and confirm output details before running."
+        ],
+        "documentationUrl": "https://openomics.github.io/HiIP/usage/run/",
+        "sourceUrl": "https://github.com/OpenOmics/HiIP/blob/0dd4a022911f464ea19477b1c04ce9239a7c532f/docs/index.md",
+        "reviewedOn": "2026-11-18",
+        "sources": [
+          {
+            "label": "Project overview",
+            "url": "https://github.com/OpenOmics/HiIP/blob/0dd4a022911f464ea19477b1c04ce9239a7c532f/docs/index.md"
+          },
+          {
+            "label": "Run guide",
+            "url": "https://github.com/OpenOmics/HiIP/blob/0dd4a022911f464ea19477b1c04ce9239a7c532f/docs/usage/run.md"
+          },
+          {
+            "label": "README",
+            "url": "https://github.com/OpenOmics/HiIP/blob/0dd4a022911f464ea19477b1c04ce9239a7c532f/README.md"
+          }
+        ]
+      }
+    },
+    {
+      "name": "CellSight",
+      "categories": [
+        "Single cell",
+        "Utilities"
+      ],
+      "description": "R package for building interactive Shiny apps from single-cell and spatial data.",
+      "topics": [
+        "single-cell",
+        "spatial-transcriptomics",
+        "shiny",
+        "visualization",
+        "seurat",
+        "scanpy",
+        "scatac-seq",
+        "cite-seq"
+      ],
+      "details": {
+        "type": "R package",
+        "overview": "Creates shareable Shiny applications for exploring processed single-cell multi-omics and spatial transcriptomics data. CellSight supports expression and metadata views, dimensionality reductions, spatial plots, and peak-track visualization. Researchers can prepare data from Seurat, Scanpy, Signac, or ArchR and customize an app for collaborators to explore locally or through a Shiny deployment.",
+        "inputs": [
+          "Processed single-cell objects or AnnData h5ad files, with the assays, metadata, and dimensionality reductions to display.",
+          "Modality-specific inputs from Seurat, Signac, or ArchR for spatial and chromatin-accessibility views."
+        ],
+        "outputs": [
+          "Shiny application code and supporting data files.",
+          "Interactive expression, metadata, embedding, spatial, and peak-track views for the supplied modalities."
+        ],
+        "notes": [
+          "App generation and app hosting use different dependency groups; follow the package setup and deployment instructions.",
+          "AnnData input uses Python anndata through reticulate; peak-track plots require bwtool.",
+          "The main app-building workflow starts with processed data objects; choose the appropriate modality-specific preparation guide."
+        ],
+        "documentationUrl": "https://openomics.github.io/CellSight/",
+        "sourceUrl": "https://github.com/OpenOmics/CellSight/blob/main/README.md",
+        "sources": [
+          {
+            "label": "Package overview and quick start",
+            "url": "https://github.com/OpenOmics/CellSight/blob/main/README.md"
+          },
+          {
+            "label": "Package dependencies",
+            "url": "https://github.com/OpenOmics/CellSight/blob/main/DESCRIPTION"
+          },
+          {
+            "label": "App data generation reference",
+            "url": "https://github.com/OpenOmics/CellSight/blob/main/man/makeShinyFiles.Rd"
+          }
+        ],
+        "reviewedOn": "2026-11-24"
+      },
+      "url": "https://github.com/OpenOmics/CellSight"
+    },
+    {
+      "name": "PDtoMSstats",
+      "categories": [
+        "Proteomics",
+        "Utilities"
+      ],
+      "description": "Proteome Discoverer PSM analysis with MSstats, reports, and optional time-course modeling.",
+      "topics": [
+        "proteomics",
+        "mass-spectrometry",
+        "msstats",
+        "proteome-discoverer",
+        "time-course",
+        "differential-abundance",
+        "masigpro",
+        "limma",
+        "mfuzz"
+      ],
+      "details": {
+        "type": "Analysis workflow",
+        "overview": "Takes peptide-spectrum match (PSM) tables from Proteome Discoverer through quality control, MSstats protein summarization, and planned comparisons. A configurable launcher produces reports and result tables, with optional formatted workbook export. An additional time-course workflow models independent samples with maSigPro and limma and clusters their protein trajectories with Mfuzz.",
+        "inputs": [
+          "Proteome Discoverer PSM table and sample annotation in supported Excel or delimited formats.",
+          "Analysis configuration and optional contrast definitions.",
+          "A hierarchical Proteome Discoverer protein workbook for the optional formatted Excel export."
+        ],
+        "outputs": [
+          "Self-contained HTML reports, protein-level result tables, figures, and saved R analysis objects.",
+          "Optional formatted Excel workbook with protein and peptide worksheets.",
+          "Optional time-course model results, significant-protein tables, and method-specific trajectory clusters."
+        ],
+        "notes": [
+          "Docker is the recommended setup; the repository also documents native R/Quarto and Apptainer/Slurm execution.",
+          "Every PSM File ID must match exactly one annotation row.",
+          "The time-course models require independent biological samples and are not designed for repeated measures."
+        ],
+        "documentationUrl": "https://github.com/OpenOmics/PDtoMSstats/blob/main/docs/command.md",
+        "sourceUrl": "https://github.com/OpenOmics/PDtoMSstats/blob/main/README.md",
+        "sources": [
+          {
+            "label": "Workflow overview",
+            "url": "https://github.com/OpenOmics/PDtoMSstats/blob/main/README.md"
+          },
+          {
+            "label": "Input formats and sample matching",
+            "url": "https://github.com/OpenOmics/PDtoMSstats/blob/main/docs/input-files.md"
+          },
+          {
+            "label": "Time-course methods and limitations",
+            "url": "https://github.com/OpenOmics/PDtoMSstats/blob/main/docs/timecourse.md"
+          }
+        ],
+        "reviewedOn": "2026-11-24"
+      },
+      "url": "https://github.com/OpenOmics/PDtoMSstats"
+    },
+    {
+      "name": "microbe-count",
+      "categories": [
+        "Metagenomics"
+      ],
+      "description": "Estimates microbial composition from unmapped reads in host-aligned paired-end BAM files.",
+      "topics": [
+        "metagenomics",
+        "microbial-composition",
+        "kraken2",
+        "bracken",
+        "taxpasta",
+        "host-removal",
+        "snakemake"
+      ],
+      "details": {
+        "type": "Pipeline",
+        "overview": "Extracts reads that did not align to the host genome from paired-end BAM files, then classifies them with Kraken2 and estimates microbial abundances with Bracken. The Snakemake workflow aggregates sample results into count matrices at selected taxonomic levels and collects sequencing and classification quality metrics in a MultiQC report. It supports local and Slurm execution.",
+        "inputs": [
+          "Host-aligned paired-end BAM files containing the unmapped reads to analyze.",
+          "A Kraken2 database with compatible Bracken reference files and taxonomy names.dmp and nodes.dmp files."
+        ],
+        "outputs": [
+          "Per-sample Kraken2 classification reports and Bracken abundance tables.",
+          "Combined estimated-count matrices at the requested taxonomic levels.",
+          "Trimmed host-unmapped FASTQs, sequencing quality metrics, and a MultiQC report."
+        ],
+        "notes": [
+          "The documented input is host-aligned paired-end BAM, rather than raw FASTQ.",
+          "The README specifies Snakemake <=7.32.4 and Singularity >=3.5.",
+          "Species-level estimation is the default; additional taxonomic levels can be selected."
+        ],
+        "documentationUrl": "https://openomics.github.io/microbe-count/usage/run/",
+        "sourceUrl": "https://github.com/OpenOmics/microbe-count/blob/main/README.md",
+        "sources": [
+          {
+            "label": "Pipeline overview and requirements",
+            "url": "https://github.com/OpenOmics/microbe-count/blob/main/README.md"
+          },
+          {
+            "label": "Run options and reference requirements",
+            "url": "https://github.com/OpenOmics/microbe-count/blob/main/docs/usage/run.md"
+          },
+          {
+            "label": "Default workflow outputs",
+            "url": "https://github.com/OpenOmics/microbe-count/blob/main/workflow/Snakefile"
+          }
+        ],
+        "reviewedOn": "2026-11-24"
+      },
+      "url": "https://github.com/OpenOmics/microbe-count"
+    },
+    {
+      "name": "tcr-seek",
+      "categories": [
+        "Genomics"
+      ],
+      "description": "Bulk T-cell receptor sequencing, immune repertoire analysis, and integrated quality control.",
+      "topics": [
+        "tcr-seq",
+        "immune-repertoire",
+        "airr",
+        "presto",
+        "change-o",
+        "igblast",
+        "immunarch",
+        "snakemake"
+      ],
+      "details": {
+        "type": "Pipeline",
+        "overview": "Processes bulk paired-end T-cell receptor sequencing data with pRESTO, then uses Change-O and IgBLAST to produce immune repertoire assignments. AIRR-formatted tables feed an immunarch object for repertoire diversity and optional rarefaction analysis. Quarto and MultiQC reports summarize repertoire and sequencing quality, with execution supported locally or through Slurm.",
+        "inputs": [
+          "Paired gzipped FASTQ files, supplied directly or through a sample-to-FASTQ TSV.",
+          "A reference directory with the required primer, C-region, and immune reference FASTA files.",
+          "Optional sample metadata for repertoire annotations and report grouping."
+        ],
+        "outputs": [
+          "Processed pRESTO sequences and per-sample AIRR repertoire tables.",
+          "Reusable immunarch Immdata.rds object, diversity results, and optional rarefaction outputs.",
+          "Quarto repertoire report, MultiQC report, and tabulated pipeline quality metrics."
+        ],
+        "notes": [
+          "This is a bulk TCR-seq workflow; the run guide lists the exact primer and reference filenames required.",
+          "The README specifies Snakemake <=7.32.4 and Singularity >=3.5; worker jobs use a container image.",
+          "Rarefaction can be disabled for larger runs, and intermediate-file cleanup is optional."
+        ],
+        "documentationUrl": "https://openomics.github.io/tcr-seek/usage/run/",
+        "sourceUrl": "https://github.com/OpenOmics/tcr-seek/blob/main/README.md",
+        "sources": [
+          {
+            "label": "Pipeline overview and requirements",
+            "url": "https://github.com/OpenOmics/tcr-seek/blob/main/README.md"
+          },
+          {
+            "label": "Inputs, execution options, and outputs",
+            "url": "https://github.com/OpenOmics/tcr-seek/blob/main/docs/usage/run.md"
+          }
+        ],
+        "reviewedOn": "2026-11-24"
+      },
+      "url": "https://github.com/OpenOmics/tcr-seek"
+    },
+    {
+      "name": "snakevision",
+      "categories": [
+        "Utilities"
+      ],
+      "description": "Command-line tool for turning Snakemake rule graphs into customizable SVG diagrams.",
+      "topics": [
+        "snakemake",
+        "visualization",
+        "rulegraph",
+        "dag",
+        "svg",
+        "workflow-diagram",
+        "python"
+      ],
+      "details": {
+        "type": "Command-line tool",
+        "overview": "Renders Snakemake rule graphs as SVG diagrams for documenting and explaining workflows. It accepts DOT graph input from a file or standard input, can omit selected rules, and supports custom node and edge styles. Optional animation and interactive controls help readers follow dependencies; the interactive mode can display rule annotations supplied in YAML.",
+        "inputs": [
+          "Snakemake rule graph in DOT format, supplied as a file or through standard input.",
+          "Optional style settings, excluded rule names, and a YAML file of rule annotations."
+        ],
+        "outputs": [
+          "Customizable SVG workflow diagrams.",
+          "Optional animated SVGs or interactive SVGs with playback controls, dependency highlighting, and rule annotations."
+        ],
+        "notes": [
+          "Generate the input graph with Snakemake and the target workflow configuration; snakevision visualizes the graph rather than executing the analysis.",
+          "The package declares Python >=3.7,<4 and is installed with pip; Snakemake and workflow dependencies are needed to generate a fresh rule graph.",
+          "Interactive output requires a viewer that permits SVG JavaScript; the separate animation option does not require scripts."
+        ],
+        "documentationUrl": "https://github.com/OpenOmics/snakevision#readme",
+        "sourceUrl": "https://github.com/OpenOmics/snakevision/blob/main/README.md",
+        "sources": [
+          {
+            "label": "Overview, installation, and examples",
+            "url": "https://github.com/OpenOmics/snakevision/blob/main/README.md"
+          },
+          {
+            "label": "Command-line options and interactive output",
+            "url": "https://github.com/OpenOmics/snakevision/blob/main/snakevision/cli.py"
+          },
+          {
+            "label": "Package requirements",
+            "url": "https://github.com/OpenOmics/snakevision/blob/main/pyproject.toml"
+          }
+        ],
+        "reviewedOn": "2026-11-24"
+      },
+      "url": "https://github.com/OpenOmics/snakevision"
+    }
+  ]
+}

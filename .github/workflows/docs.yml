@@ -1,39 +1,66 @@
-name: Documentation
+name: Website
+
 on:
   push:
-    branches:
-      - master
-      - main
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
 permissions:
   contents: read
-  pages: write
-  id-token: write
+
+concurrency:
+  group: website-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - name: Install dependencies
+        run: |
+          if [ -f package-lock.json ]; then npm ci; else npm install; fi
+      - run: npm test
+      - run: npm run build
+      - name: Install browser
+        run: npx playwright install --with-deps chromium
+      - run: npm run test:browser
+      - name: Upload review build
+        uses: actions/upload-artifact@v4
+        with:
+          name: openomics-static-site
+          path: |
+            dist/
+            package-lock.json
+      - name: Upload browser screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-screenshots
+          path: test-results/
+          if-no-files-found: ignore
+      - name: Package GitHub Pages site
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist
+
   deploy:
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-python@v5
-        with:
-          python-version: 3.x
-      - run: pip install zensical
-      - name: Build site with error checking
-        run: |
-          set -e
-          BUILD_OUTPUT=$(zensical build --clean 2>&1)
-          echo "$BUILD_OUTPUT"
-          if echo "$BUILD_OUTPUT" | grep -iq "error:"; then
-            echo "::error::Build completed with errors"
-            exit 1
-          fi
-          exit 0
-      - run: touch site/.nojekyll
       - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v4
-        with:
-          path: site
       - uses: actions/deploy-pages@v4
         id: deployment
