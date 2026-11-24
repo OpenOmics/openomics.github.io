@@ -14,7 +14,8 @@ const expectedRepositories = [
   'chrom-seek', 'metamorph', 'baseline', 'cfChIP-seek', 'assembly-seek',
   'parabricks-benchmark', 'cell-seek', 'mir-seek', 'mr-seek', 'cyte-seek',
   'istari', 'mpox-seek', 'pbAmp-seek', 'leafworker', 'space-seek', 'ervx',
-  'scErvx', 'weave', 'fragmentomics', 'DLscID', 'iso-seek', 'HiIP',
+  'scErvx', 'weave', 'fragmentomics', 'HiIP',
+  'CellSight', 'PDtoMSstats', 'microbe-count', 'tcr-seek', 'snakevision',
 ];
 const mimeTypes = {
   '.html': 'text/html; charset=utf-8',
@@ -90,7 +91,7 @@ async function waitForRepositoryCount(page, count) {
   await page.waitForFunction((expected) => (
     document.querySelectorAll('#repoList [data-repo]').length === expected
   ), count);
-  assert.match(await page.locator('#resultCount').innerText(), new RegExp(`^${count} / 28 workflows$`));
+  assert.match(await page.locator('#resultCount').innerText(), new RegExp(`^${count} / ${expectedRepositories.length} projects$`));
 }
 
 async function expectRepositoryNames(page, expected) {
@@ -119,7 +120,7 @@ async function expectStaticCatalog(page, defaultPipeline) {
   const links = await page.locator('#repoList a[data-repo]').evaluateAll((nodes) => (
     nodes.map((node) => ({ name: node.dataset.repo, href: node.getAttribute('href') }))
   ));
-  assert.equal(links.length, 28, 'Every workflow must be a real link in the prerendered pipeline page');
+  assert.equal(links.length, 31, 'Every workflow must be a real link in the prerendered pipeline page');
   assert.deepEqual(sorted(links.map(({ name }) => name)), sorted(expectedRepositories));
   for (const { name, href } of links) {
     assert.equal(href, `https://github.com/OpenOmics/${name}`, `Static repository link for ${name}`);
@@ -129,7 +130,7 @@ async function expectStaticCatalog(page, defaultPipeline) {
 }
 
 async function expectHomeLinks(page) {
-  assert.match(await page.locator('#heroTitle').innerText(), /Complex biology\.\s*Made legible\./, 'The homepage preserves the biology-to-clarity headline');
+  assert.match(await page.locator('#heroTitle').innerText(), /Start Decoding\s*Complex Biology/, 'The homepage preserves the current decoding headline');
   const artDescription = await page.locator('.art-caption .sr').textContent();
   assert.match(artDescription, /rings?/i, 'An accessible description identifies the sequence-ring artwork');
   assert.match(artDescription, /align/i, 'The accessible description explains the alignment');
@@ -392,7 +393,7 @@ try {
     assert.equal(await staticPage.locator(selector).count(), 1, `Legacy ${path} destination exists`);
   }
   await staticContext.close();
-  console.log('PASS: dedicated routes, all 28 SSR links, rich default details, and native guidance without JavaScript');
+  console.log('PASS: dedicated routes, all 31 SSR links, rich default details, and native guidance without JavaScript');
 
   const context = await newContext({ viewport: { width: 1280, height: 900 }, reducedMotion: 'no-preference' });
   await context.grantPermissions(['clipboard-read', 'clipboard-write'], { origin });
@@ -410,11 +411,13 @@ try {
   await page.waitForURL(`${origin}/pipelines/`);
   await page.waitForFunction(() => document.getElementById('search')?.disabled === false);
   await expectRepositoryNames(page, expectedRepositories);
-  assert.equal(await page.locator('#repoList button[data-repo]').count(), 28, 'Hydration activates in-page selection');
+  assert.equal(await page.locator('#repoList button[data-repo]').count(), 31, 'Hydration activates in-page selection');
   await page.reload({ waitUntil: 'load' });
   await page.waitForFunction(() => document.getElementById('search')?.disabled === false);
   await expectRepositoryNames(page, expectedRepositories);
   await expectRichDetails(page, defaultPipeline);
+  await expectSeamAtRightEdge(page, 3440);
+  await page.setViewportSize({ width: 1280, height: 900 });
   await expectReadableType(page, [...catalogCopySelectors, '#nav a'], 'Desktop pipeline page');
   await expectNoHorizontalOverflow(page, 'Desktop pipeline page');
   assert.deepEqual(runtimeErrors, [], 'Hydration must not emit console or runtime errors');
@@ -424,41 +427,68 @@ try {
   await search.fill('RNA-seq');
   await page.waitForFunction(() => {
     const rows = [...document.querySelectorAll('#repoList [data-repo]')];
-    return rows.length > 0 && rows.length < 28 && rows.some((row) => row.dataset.repo === 'RNA-seek');
+    return rows.length > 0 && rows.length < 31 && rows.some((row) => row.dataset.repo === 'RNA-seek');
   });
   const hyphenatedMatches = await repositoryNames(page);
   await page.locator('#clearSearch').click();
-  await waitForRepositoryCount(page, 28);
+  await waitForRepositoryCount(page, 31);
   await search.fill('  rna   seq  ');
   await expectRepositoryNames(page, hyphenatedMatches);
   await page.locator('#clearSearch').click();
-  await waitForRepositoryCount(page, 28);
+  await waitForRepositoryCount(page, 31);
   assert.equal(await search.inputValue(), '');
 
   await search.fill(outputSearch.query);
   await expectRepositoryNames(page, [outputSearch.pipeline.name]);
   await expectRichDetails(page, outputSearch.pipeline);
   await page.locator('#clearSearch').click();
-  await waitForRepositoryCount(page, 28);
+  await waitForRepositoryCount(page, 31);
   console.log(`PASS: output-based search finds ${outputSearch.pipeline.name} from reviewed detail content`);
 
   await page.locator('[data-category="Genomics"]').click();
   await expectRepositoryNames(page, [
-    'genome-seek', 'assembly-seek', 'parabricks-benchmark', 'mr-seek',
+    'genome-seek', 'assembly-seek', 'mr-seek',
     'istari', 'mpox-seek', 'pbAmp-seek', 'fragmentomics',
   ]);
   await page.locator('[data-category="Utilities"]').click();
-  await expectRepositoryNames(page, ['baseline', 'parabricks-benchmark', 'istari', 'weave']);
+  await expectRepositoryNames(page, ['baseline', 'parabricks-benchmark', 'istari', 'weave', 'CellSight', 'snakevision']);
   assert.equal(await page.locator('[data-category="Utilities"]').getAttribute('aria-pressed'), 'true');
   await search.fill('no-such-openomics-workflow-xyz');
   await waitForRepositoryCount(page, 0);
-  assert.match(await page.locator('#detail').innerText(), /No matching workflows/);
+  assert.match(await page.locator('#detail').innerText(), /No matching projects/);
   await page.locator('#reset').click();
   await expectRepositoryNames(page, expectedRepositories);
   assert.equal(await search.inputValue(), '');
   assert.equal(await page.locator('[data-category="All"]').getAttribute('aria-pressed'), 'true');
   assert.equal(await search.evaluate((element) => element === document.activeElement), true, 'Reset returns keyboard focus to search');
   console.log('PASS: normalized search, secondary-category filters, and empty-state reset');
+
+  // Find each new software form through its scientific inputs or outputs,
+  // then check that selection keeps its own details, sources, and type label.
+  for (const [name, category, query, type] of [
+    ['CellSight', 'Single cell', 'h5ad', 'R package'],
+    ['PDtoMSstats', 'Proteomics', 'Proteome Discoverer', 'Analysis workflow'],
+    ['microbe-count', 'Metagenomics', 'host-aligned paired-end BAM', 'Pipeline'],
+    ['tcr-seek', 'Transcriptomics', 'AIRR', 'Pipeline'],
+    ['snakevision', 'Utilities', 'DOT', 'Command-line tool'],
+  ]) {
+    await page.locator('#clearSearch').click();
+    await page.locator(`[data-category="${category}"]`).click();
+    await search.fill(query);
+    assert.ok((await repositoryNames(page)).includes(name), `${name} is discoverable by input/output in its category`);
+    await page.locator(`[data-repo="${name}"]`).click();
+    await expectRichDetails(page, pipelines.find((pipeline) => pipeline.name === name));
+    assert.equal((await page.locator('.project-type').textContent()).replace(/ ·\s*$/, ''), type);
+    assert.equal(await page.locator('.pipeline-provenance time').getAttribute('datetime'), '2026-11-24');
+    assert.equal(await page.locator('#cloneCommand').innerText(), `git clone https://github.com/OpenOmics/${name}.git`);
+  }
+  await page.locator('#clearSearch').click();
+  await page.locator('[data-category="Archived"]').click();
+  await expectRepositoryNames(page, ['cfChIP-seek', 'cyte-seek']);
+  await page.locator('[data-category="All"]').click();
+  await expectRepositoryNames(page, expectedRepositories);
+  console.log('PASS: new packages, tools, and pipelines are searchable, categorized, and sourced; Archived remains intact');
+
 
   await page.locator('[data-repo="RNA-seek"]').click();
   await expectRichDetails(page, defaultPipeline);
@@ -487,7 +517,7 @@ try {
   await expectReadableType(page, catalogCopySelectors, '320px pipeline page');
   await expectNoHorizontalOverflow(page, '320px pipeline page with expanded rich details');
   await search.fill('');
-  await waitForRepositoryCount(page, 28);
+  await waitForRepositoryCount(page, 31);
   await page.locator('[data-repo="parabricks-benchmark"]').click();
   await page.waitForFunction(() => document.querySelector('#detail h3')?.textContent === 'parabricks-benchmark');
   await expectRichDetails(page, pipelines.find((pipeline) => pipeline.name === 'parabricks-benchmark'));

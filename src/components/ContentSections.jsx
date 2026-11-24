@@ -3,7 +3,7 @@ import RollingText from './RollingText.jsx';
 const principles = [
   {
     number: '01',
-    title: 'Built to reproduce.',
+    title: 'Built for reproducibility.',
     description: 'Explicit workflows, environment management, and containerization help make complex analyses easier to understand and repeat.',
   },
   {
@@ -13,7 +13,7 @@ const principles = [
   },
   {
     number: '03',
-    title: 'Made to build on.',
+    title: 'Designed for reuse.',
     description: 'Use existing pipelines as a starting point. Follow each repository’s documentation to configure the workflow for your data and environment.',
   },
 ];
@@ -25,7 +25,7 @@ const questions = [
   },
   {
     question: 'Can I run these on an HPC cluster?',
-    answer: 'Snakemake supports execution on workstations, HPC clusters, and cloud infrastructure. The setup available for a particular pipeline depends on that repository. Review its documented profiles, software versions, and resource requirements.',
+    answer: 'Snakemake supports execution on workstations, HPC clusters, and cloud infrastructure. Most of our pipelines have been designed to run in HPC SLURM environments; however, they can often be adapted to other setups. The setup available for a particular pipeline depends on that repository. Review its documented profiles, software versions, and resource requirements.',
   },
   {
     question: 'How can I contribute or report an issue?',
@@ -33,15 +33,19 @@ const questions = [
   },
   {
     question: 'Which license applies to a workflow?',
-    answer: 'Check the LICENSE file and dependency terms in the specific repository you intend to use. Licensing is determined per project.',
+    answer: 'Check the LICENSE file and dependency terms in the specific repository you intend to use. Licensing is determined per project. Most of our pipelines and tools are released under permissive open-source licenses, such as MIT.',
   },
 ];
 
 export function Approach() {
+  // Synthetic related sequences with conserved columns, substitutions, and gaps.
   const sequenceRows = [
-    'ATGCCGTAACTGCTAGTCCGA', 'GCTAGTCGATGCTA—ACGTT',
-    'CGTACGTTAGCTCAACGTTA', 'ATGCTAACCGTGCTAGTCAG',
-    'TTACCGATGGCATTCATAGC', 'CGTACAGTTACGCTAGCTGA',
+    'ATGCCG-AACTG-CTAGTCCGAT',
+    'ATGCCGTAACTGACTAGTCCGAT',
+    'A-GTCGTAACTG-CTAGTCC-AT',
+    'ATG-CGTAGCTGACTAGTCCGAT',
+    'ATGCCGTAACTG-CTAGTTCGAT',
+    'ATGC-GTAACTGACTAGTCCG-T',
   ];
   return (
     <section className="light section approach-section" id="approach">
@@ -49,7 +53,7 @@ export function Approach() {
         <div className="approach-opening">
           <div>
             <div className="eyebrow">001 / From sequence to insight</div>
-            <h2>Every result<br />has a method.</h2>
+            <h2>Discovery works<br />better together</h2>
           </div>
           <div className="alignment-study" aria-hidden="true">
             <svg viewBox="0 0 540 224" focusable="false">
@@ -62,12 +66,14 @@ export function Approach() {
                 </g>
               ))}
             </svg>
-            <span>Illustrative sequence study</span>
           </div>
         </div>
         <div className="intro-bottom">
           <div className="eyebrow">Shared tools.<br />Reproducible research.</div>
-          <p className="intro-copy">OpenOmics is a community of bioinformaticians, computational biologists, and data scientists building workflows for genomics and multi-omics research. Our mission is to make scientific analysis reproducible, scalable, and well documented.</p>
+          <div>
+            <p className="intro-copy">OpenOmics is a community of bioinformaticians, computational biologists, and data scientists building workflows and tools for genomics and multi-omics research. Our mission is to make scientific analyses more accessible, transparent, and reproducible. We build tools that help researchers turn complex data into actionable insights.</p>
+            <p className="intro-copy">Research moves forward when teams can understand how a result was produced, share lessons learned, and build on each other’s work. We create tools that support that process—from the first analysis to the next discovery—guided by three principles.</p>
+          </div>
         </div>
         <div className="principles">
           {principles.map(({ number, title, description }) => (
@@ -94,7 +100,7 @@ export function GettingStarted({ pipelineHref }) {
         <div className="start-grid">
           <div>
             <div className="eyebrow">003 / From code to analysis</div>
-            <h2>Your data.<br />A clear path<br />forward.</h2>
+            <h2>From workflow<br /> to first run.</h2>
             <p className="intro-copy">Snakemake brings readable workflow definitions and flexible execution to scientific computing. Specific environments, versions, and execution profiles belong in each pipeline’s documentation.</p>
             <a className="text-link" href="https://snakemake.readthedocs.io/en/stable/getting_started/installation.html" target="_blank" rel="noopener noreferrer">Snakemake installation guide ↗</a>
           </div>
@@ -103,7 +109,7 @@ export function GettingStarted({ pipelineHref }) {
               <span className="step-num">01 /</span>
               <div>
                 <h3>Choose your workflow.</h3>
-                <p>Use the <a href={pipelineHref}>pipeline explorer</a> to find the analysis that matches your question and sequencing technology.</p>
+                <p>Use the <a href={pipelineHref}>collection explorer</a> to find a workflow or tool that addresses your research question and sequencing technology.</p>
               </div>
             </li>
             <li>
@@ -117,7 +123,7 @@ export function GettingStarted({ pipelineHref }) {
               <span className="step-num">03 /</span>
               <div>
                 <h3>Prepare your environment.</h3>
-                <p>Install the required Snakemake version and follow the repository’s environment or container setup. Check the requirements for your workstation, cluster, or cloud environment.</p>
+                <p>Install the required Snakemake version and follow the repository’s environment or container setup. Check the requirements for your workstation or cluster environment.</p>
               </div>
             </li>
             <li>
@@ -149,16 +155,16 @@ export function Community({ year, pipelineHref }) {
   return (
     <section className="closing" id="community">
       <div className="wrap">
-        <div className="eyebrow muted">004 / Built together</div>
+        <div className="eyebrow muted">004 / Let's build together</div>
         <div className="closing-head">
           <div>
-            <h2>Science moves forward<br />when we <span>share.</span></h2>
+            <h2><strong>Science moves<br /> forward</strong> <em>when<br /> we <span>share.</span></em></h2>
             <a className="btn" href="https://github.com/OpenOmics" target="_blank" rel="noopener noreferrer">
               <RollingText>Build with OpenOmics</RollingText>
               <span aria-hidden="true">↗</span>
             </a>
           </div>
-          <p className="closing-copy">We share workflows, documentation, and ideas with the research community. Bring your questions, improve a pipeline, or help make someone else’s next analysis a little clearer.</p>
+          <p className="closing-copy">We believe in the power of community-led efforts. Let's share workflows, tools, documentation, and ideas with the greater research community.<br/><br/>Bring your questions, improve a tool or pipeline, and help advance scientific research.</p>
         </div>
         <div className="closing-wordmark" aria-hidden="true">OpenOmics</div>
         <footer className="footer-row">

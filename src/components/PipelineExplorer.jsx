@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import catalog from '../data/pipelines.json';
+import NucleotideSeam from './NucleotideSeam.jsx';
 import {
   CATEGORIES,
   categoryLabel,
@@ -26,7 +27,7 @@ function PipelineDetails({ pipeline, enhanced, onReset }) {
   if (!pipeline) {
     return (
       <div className="empty">
-        <h3 id="pipelineDetailTitle">No matching workflows.</h3>
+        <h3 id="pipelineDetailTitle">No matching projects.</h3>
         <p>Try a broader search or select another analysis category.</p>
         <button className="btn" id="reset" type="button" onClick={onReset}>
           Reset filters <span aria-hidden="true">↗</span>
@@ -72,7 +73,10 @@ function PipelineDetails({ pipeline, enhanced, onReset }) {
         <span className="file-path">OpenOmics / {pipeline.name}</span>
         <span className="mono muted">README ↗</span>
       </div>
-      <div className="detail-kicker">{pipeline.categories.map(categoryLabel).join(' / ')}</div>
+      <div className="detail-kicker">
+        {details?.type && <span className="project-type">{details.type} · </span>}
+        {pipeline.categories.map(categoryLabel).join(' / ')}
+      </div>
       {details?.status && <div className="pipeline-status">{pipelineStatusLabel(details.status)}</div>}
       <h3 id="pipelineDetailTitle">{pipeline.name}</h3>
       <p className="pipeline-overview">{details?.overview || pipeline.description}</p>
@@ -148,6 +152,8 @@ export default function PipelineExplorer({ standalone = false, homeHref = '/' })
   const [selectedName, setSelectedName] = useState('RNA-seek');
   const [announcement, setAnnouncement] = useState('');
   const searchRef = useRef(null);
+  const listRef = useRef(null);
+  const [hasMoreBelow, setHasMoreBelow] = useState(false);
 
   // The server output contains real links for every repository. Browser-only
   // interactions are activated after hydration, leaving that fallback usable.
@@ -158,6 +164,24 @@ export default function PipelineExplorer({ standalone = false, homeHref = '/' })
     [query, category],
   );
   const selected = selectPipeline(items, selectedName);
+
+  useEffect(() => {
+    const list = listRef.current;
+    if (!list) return;
+
+    const updateScrollHint = () => {
+      setHasMoreBelow(list.scrollHeight - list.clientHeight - list.scrollTop > 1);
+    };
+    updateScrollHint();
+    list.addEventListener('scroll', updateScrollHint, { passive: true });
+    const observer = new ResizeObserver(updateScrollHint);
+    observer.observe(list);
+
+    return () => {
+      list.removeEventListener('scroll', updateScrollHint);
+      observer.disconnect();
+    };
+  }, [items, enhanced]);
 
   function changeFilters(nextQuery, nextCategory) {
     const nextItems = filterPipelines(pipelines, { query: nextQuery, category: nextCategory });
@@ -184,30 +208,35 @@ export default function PipelineExplorer({ standalone = false, homeHref = '/' })
 
   return (
     <section className={`catalog section${standalone ? ' pipeline-page' : ''}`} id="pipelines" aria-labelledby="pipelinesHeading">
-      <div className="wrap">
-        {standalone && (
-          <nav className="page-breadcrumb" aria-label="Breadcrumb">
-            <a href={homeHref}>Home</a>
-            <span aria-hidden="true">/</span>
-            <span aria-current="page">Pipelines</span>
-          </nav>
-        )}
-        <div className="section-top">
-          <div className="catalog-heading">
-            <div className="eyebrow muted">{standalone ? 'The OpenOmics collection' : '002 / The collection'}</div>
-            <Heading id="pipelinesHeading">Find your next<br />starting point.</Heading>
+      <div className={standalone ? 'pipeline-intro' : undefined}>
+        <div className="wrap">
+          {standalone && (
+            <nav className="page-breadcrumb" aria-label="Breadcrumb">
+              <a href={homeHref}>Home</a>
+              <span aria-hidden="true">/</span>
+              <span aria-current="page">Pipelines</span>
+            </nav>
+          )}
+          <div className="section-top">
+            <div className="catalog-heading">
+              <div className="eyebrow muted">{standalone ? 'The OpenOmics catalog' : '002 / The collection'}</div>
+              <Heading id="pipelinesHeading">Explore our collection.</Heading>
+            </div>
+            <p>Explore pipelines, tools, and packages for multi-omics research. Find a starting point and go straight to the source.</p>
           </div>
-          <p>From RNA expression to genome assembly. Find a workflow, explore its scope, and go straight to the source.</p>
         </div>
+      </div>
+      {standalone && <NucleotideSeam />}
+      <div className={standalone ? 'wrap pipeline-workspace' : 'wrap'}>
         <div className="toolbar">
           <div className="search-wrap">
             <span aria-hidden="true">⌕</span>
-            <label className="sr" htmlFor="search">Search pipelines by name, analysis, input data, or output</label>
+            <label className="sr" htmlFor="search">Search projects by name, analysis, input data, or output</label>
             <input
               id="search"
               ref={searchRef}
               type="search"
-              placeholder="Search workflows, input data, or outputs…"
+              placeholder="Search projects, input data, or outputs…"
               autoComplete="off"
               value={query}
               disabled={!enhanced}
@@ -243,33 +272,35 @@ export default function PipelineExplorer({ standalone = false, homeHref = '/' })
             <span>OpenOmics / pipeline explorer</span>
             <span className="window-dots" aria-hidden="true"><i /><i /><i /></span>
             <span id="resultCount" role="status" aria-live="polite" aria-atomic="true">
-              {items.length} / {pipelines.length} workflows
+              {items.length} / {pipelines.length} projects
             </span>
           </div>
           <div className="browser-body">
-            <aside className="repo-sidebar" aria-label="Pipeline index">
-              <div className="index-label">WORKFLOWS / SELECT TO EXPLORE</div>
-              <div className="repo-list" id="repoList">
-                {items.length ? items.map((pipeline) => (
-                  enhanced ? (
-                    <button
-                      key={pipeline.name}
-                      type="button"
-                      className="repo-row"
-                      data-repo={pipeline.name}
-                      aria-pressed={selected?.name === pipeline.name}
-                      aria-controls="detail"
-                      onClick={() => choosePipeline(pipeline)}
-                    >
-                      {pipeline.name}
-                      {selected?.name === pipeline.name && <span className="row-arrow" aria-hidden="true">↗</span>}
-                    </button>
-                  ) : (
-                    <a key={pipeline.name} className="repo-row" data-repo={pipeline.name} href={pipeline.url} {...externalLink}>
-                      {pipeline.name}<span className="row-arrow" aria-hidden="true">↗</span>
-                    </a>
-                  )
-                )) : <div className="empty">No matches in this category.</div>}
+            <aside className="repo-sidebar" aria-label="Project index">
+              <div className="index-label">PROJECTS / SELECT TO EXPLORE</div>
+              <div className="repo-list-frame" data-more-below={hasMoreBelow}>
+                <div className="repo-list" id="repoList" ref={listRef}>
+                  {items.length ? items.map((pipeline) => (
+                    enhanced ? (
+                      <button
+                        key={pipeline.name}
+                        type="button"
+                        className="repo-row"
+                        data-repo={pipeline.name}
+                        aria-pressed={selected?.name === pipeline.name}
+                        aria-controls="detail"
+                        onClick={() => choosePipeline(pipeline)}
+                      >
+                        {pipeline.name}
+                        {selected?.name === pipeline.name && <span className="row-arrow" aria-hidden="true">↗</span>}
+                      </button>
+                    ) : (
+                      <a key={pipeline.name} className="repo-row" data-repo={pipeline.name} href={pipeline.url} {...externalLink}>
+                        {pipeline.name}<span className="row-arrow" aria-hidden="true">↗</span>
+                      </a>
+                    )
+                  )) : <div className="empty">No matches in this category.</div>}
+                </div>
               </div>
             </aside>
             <div className="detail" id="detail" role="region" aria-labelledby="pipelineDetailTitle">
@@ -283,13 +314,10 @@ export default function PipelineExplorer({ standalone = false, homeHref = '/' })
           </div>
         </div>
         <p className="catalog-note">
-          Repository list: <time dateTime={catalog.metadata.generatedDate}>{catalog.metadata.displayDate}</time>
-          {' · '}{catalog.metadata.count} workflows{' · '}
-          {catalog.metadata.detailsReviewedDate && <>
-            Descriptions reviewed <time dateTime={catalog.metadata.detailsReviewedDate}>{catalog.metadata.detailsReviewedDisplayDate}</time>{' · '}
-          </>}
+          Catalog updated: <time dateTime={catalog.metadata.updatedDate}>{catalog.metadata.updatedDisplayDate}</time>
+          {' · '}{catalog.metadata.count} projects{' · '}
+          Documentation review dates are listed per project{' · '}
           <a href="https://github.com/OpenOmics" {...externalLink}>Visit GitHub for current repositories and activity ↗</a>
-          {' · '}<a href={catalog.metadata.sourceUrl} {...externalLink}>Catalog source ↗</a>
         </p>
         <div className="sr" id="announcement" role="status" aria-live="polite">{announcement}</div>
         <noscript>

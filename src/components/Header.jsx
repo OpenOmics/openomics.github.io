@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import RollingText from './RollingText.jsx';
 
-export default function Header({ page, links }) {
+export default function Header({ page, links, base = '/' }) {
   const navigation = [
     { href: links.approach, label: 'Our approach' },
     { href: links.pipelines, label: 'The pipelines', current: page === 'pipelines' },
@@ -29,7 +29,7 @@ export default function Header({ page, links }) {
     <header>
       <div className="wrap header-row">
         <a className="brand" href={links.home} aria-label="OpenOmics home">
-          <span className="brand-mark" aria-hidden="true" />
+          <img className="brand-mark" src={`${base}openomics-logo.png`} width="36" height="36" alt="" />
           OpenOmics
         </a>
         <button
@@ -44,10 +44,13 @@ export default function Header({ page, links }) {
           {menuOpen ? 'Close −' : 'Menu +'}
         </button>
         <nav className={`nav${menuOpen ? ' open' : ''}`} id="nav" aria-label="Main navigation">
-          {navigation.map(({ href, label, current }) => (
-            <a key={href} href={href} aria-current={current ? 'page' : undefined} onClick={() => setMenuOpen(false)}>
-              <RollingText>{label}</RollingText>
-            </a>
+          {navigation.map(({ href, label, current }, index) => (
+            <Fragment key={href}>
+              {index > 0 && <span className="nav-separator" aria-hidden="true">/</span>}
+              <a href={href} aria-current={current ? 'page' : undefined} onClick={() => setMenuOpen(false)}>
+                <RollingText>{label}</RollingText>
+              </a>
+            </Fragment>
           ))}
           <a
             className="nav-git"

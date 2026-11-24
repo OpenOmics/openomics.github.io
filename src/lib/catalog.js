@@ -2,17 +2,32 @@ export const CATEGORIES = Object.freeze([
   'All',
   'Genomics',
   'Transcriptomics',
+  'Proteomics',
   'Epigenomics',
   'Single cell',
   'Metagenomics',
   'Utilities',
+  'Archived',
 ]);
 
 export const FEATURED_PIPELINES = Object.freeze([
+  'genome-seek',
   'RNA-seek',
   'chrom-seek',
   'cell-seek',
-  'genome-seek',
+  'snakevision',
+  'fragmentomics',
+  'leafworker',
+  'CellSight',
+  'microbe-count',
+  'metamorph',
+  'metavirs',
+  'methyl-seek',
+  'mir-seek',
+  'modr',
+  'mpox-seek',
+  'nanite',
+  'tcr-seek',
 ]);
 
 export function categoryLabel(category) {
@@ -57,6 +72,7 @@ export function filterPipelines(pipelines, { query = '', category = 'All' } = {}
       pipeline.name,
       pipeline.description,
       pipeline.details?.overview ?? '',
+      pipeline.details?.type ?? '',
       pipelineStatusLabel(pipeline.details?.status),
       ...(pipeline.details?.inputs ?? []),
       ...(pipeline.details?.outputs ?? []),

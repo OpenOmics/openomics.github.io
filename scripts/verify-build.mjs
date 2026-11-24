@@ -52,7 +52,7 @@ export async function verifyBuild(site, {
     assert.equal(metaContent(html, 'property', 'og:url'), pageUrl(site, page), `${page.id}: incorrect Open Graph URL`);
     assert.equal(canonicalUrl(html), pageUrl(site, page), `${page.id}: incorrect canonical URL`);
 
-    const assets = [...html.matchAll(/(?:src|href)="([^"]+\.(?:js|css|svg)(?:\?[^"#]*)?)"/g)]
+    const assets = [...html.matchAll(/(?:src|href)="([^"]+\.(?:js|css|svg|png|ico)(?:\?[^"#]*)?)"/g)]
       .map((match) => decodeHtml(match[1]));
     assert.ok(assets.some((asset) => /\.js(?:\?|$)/.test(asset)), `${page.id}: client bundle missing`);
     assert.ok(assets.some((asset) => /\.css(?:\?|$)/.test(asset)), `${page.id}: styles missing`);

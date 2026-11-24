@@ -10,7 +10,7 @@ export default function App({ year, page = 'home', base = '/' }) {
   return (
     <>
       <a className="skip" href="#main">Skip to content</a>
-      <Header page={page} links={links} />
+      <Header page={page} links={links} base={base} />
       <main id="main">
         {page === 'pipelines' ? (
           <PipelineExplorer standalone homeHref={base} />

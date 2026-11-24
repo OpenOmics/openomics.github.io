@@ -37,8 +37,8 @@ export function buildSequenceLayout(width, height) {
     // A little open space between sequence fragments echoes the reference's
     // typeset rings. Gaps belong to their track; they never flicker or reset.
     const glyphs = Array.from({ length: count }, (_, column) => {
-      const motif = column < 4;
-      const gap = !motif && (column % 19 > 15 || (random(index * 400 + column, 7) > .94));
+      const motif = column < 3;
+      const gap = column >= 4 && (column % 19 > 15 || (random(index * 400 + column, 7) > .94));
       return {
         index: column,
         base: GLYPHS.indexOf(sequence[column % sequence.length]),

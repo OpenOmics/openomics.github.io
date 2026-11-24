@@ -17,11 +17,12 @@ const catalog = JSON.parse(readFileSync(new URL('../src/data/pipelines.json', im
 const pipelines = catalog.pipelines;
 const ordered = sortPipelines(pipelines);
 
-test('the preserved snapshot contains all 28 unique repositories and valid categories', () => {
-  assert.equal(catalog.metadata.count, 28);
+test('the current catalog contains 31 unique projects and valid categories', () => {
+  assert.equal(catalog.metadata.count, 31);
   assert.equal(catalog.metadata.generatedDate, '2026-02-03');
+  assert.equal(catalog.metadata.updatedDate, '2026-11-24');
   assert.equal(pipelines.length, catalog.metadata.count);
-  assert.equal(new Set(pipelines.map(({ name }) => name)).size, 28);
+  assert.equal(new Set(pipelines.map(({ name }) => name)).size, 31);
   for (const pipeline of pipelines) {
     assert.equal(pipeline.url, repositoryLinks(pipeline).repository);
     assert.ok(pipeline.description.length > 0);
@@ -40,12 +41,12 @@ test('the accepted, edited descriptions remain intact', () => {
 
 test('featured ordering is stable and leaves the source array unchanged', () => {
   const before = pipelines.map(({ name }) => name);
-  assert.deepEqual(ordered.slice(0, 4).map(({ name }) => name), FEATURED_PIPELINES);
+  assert.deepEqual(ordered.slice(0, FEATURED_PIPELINES.length).map(({ name }) => name), FEATURED_PIPELINES);
   assert.deepEqual(pipelines.map(({ name }) => name), before);
   assert.notEqual(ordered, pipelines);
   assert.deepEqual(
-    ordered.slice(4).map(({ name }) => name),
-    [...ordered.slice(4).map(({ name }) => name)].sort((a, b) => a.localeCompare(b, 'en')),
+    ordered.slice(FEATURED_PIPELINES.length).map(({ name }) => name),
+    [...ordered.slice(FEATURED_PIPELINES.length).map(({ name }) => name)].sort((a, b) => a.localeCompare(b, 'en')),
   );
 });
 
@@ -71,14 +72,14 @@ test('search reaches descriptions, topics, and categories, including undisplayed
 test('category and text filters intersect rather than returning unrelated matches', () => {
   assert.deepEqual(filterPipelines(ordered, { category: 'Epigenomics', query: 'RNA-seek' }), []);
   assert.deepEqual(filterPipelines(ordered, { category: 'Unknown' }), []);
-  assert.equal(filterPipelines(ordered, { query: '   ' }).length, 28);
+  assert.equal(filterPipelines(ordered, { query: '   ' }).length, 31);
 });
 
 test('repositories assigned to two categories appear in both filters', () => {
-  for (const category of ['Genomics', 'Utilities']) {
-    const names = filterPipelines(ordered, { category }).map(({ name }) => name);
-    assert.ok(names.includes('parabricks-benchmark'));
-    assert.ok(names.includes('istari'));
+  for (const [name, categories] of [['istari', ['Genomics', 'Utilities']], ['CellSight', ['Single cell', 'Utilities']]]) {
+    for (const category of categories) {
+      assert.ok(filterPipelines(ordered, { category }).some((pipeline) => pipeline.name === name));
+    }
   }
   assert.equal(categoryLabel('Single cell'), 'Single cell & spatial');
   assert.ok(filterPipelines(ordered, { category: 'Single cell' }).some(({ name }) => name === 'space-seek'));
@@ -89,7 +90,7 @@ test('selection survives filtering when visible and safely falls back for hidden
   assert.equal(selectPipeline(epigenomics, 'methyl-seek').name, 'methyl-seek');
   assert.equal(selectPipeline(epigenomics, 'RNA-seek').name, 'chrom-seek');
   assert.equal(selectPipeline([], 'RNA-seek'), null);
-  assert.equal(selectPipeline(ordered, '').name, 'RNA-seek');
+  assert.equal(selectPipeline(ordered, '').name, 'genome-seek');
 });
 
 test('README, issues, and clone links preserve case and point to the same repository', () => {
@@ -133,26 +134,32 @@ test('every pipeline has sourced scientific details and a distinct documentation
   }
 });
 
-test('documented archive and scaffold statuses are explicit and searchable', () => {
-  assert.equal(pipelines.find(({ name }) => name === 'cfChIP-seek').details.status, 'archived');
-  for (const name of ['DLscID', 'iso-seek']) {
-    assert.equal(pipelines.find((pipeline) => pipeline.name === name).details.status, 'scaffold');
+test('archived projects stay discoverable without appearing in active analysis categories', () => {
+  const archivedNames = ['cfChIP-seek', 'cyte-seek'];
+  assert.deepEqual(filterPipelines(ordered, { category: 'Archived' }).map(({ name }) => name), archivedNames);
+  for (const name of archivedNames) {
+    assert.equal(pipelines.find((pipeline) => pipeline.name === name).details.status, 'archived');
+    assert.ok(filterPipelines(ordered, { category: 'All', query: name }).some((pipeline) => pipeline.name === name));
+    for (const category of ['Epigenomics', 'Single cell']) {
+      assert.ok(!filterPipelines(ordered, { category }).some((pipeline) => pipeline.name === name));
+    }
   }
   assert.equal(pipelineStatusLabel('template'), 'Workflow template');
+  assert.equal(pipelineStatusLabel('scaffold'), 'Development scaffold');
   assert.equal(pipelineStatusLabel(undefined), '');
-  assert.ok(filterPipelines(pipelines, { query: 'development scaffold' }).some(({ name }) => name === 'DLscID'));
 });
 
 test('search finds input data, outputs, overviews, and requirements while preserving category filters', () => {
   const fixture = [{
     name: 'example', description: 'A workflow', topics: [], categories: ['Transcriptomics'],
     details: {
+      type: 'R package',
       overview: 'Quantify transcript abundance.',
       inputs: ['Aligned BAM files'], outputs: ['Gene count matrix'],
       notes: ['Requires a reference annotation'],
     },
   }];
-  for (const query of ['transcript abundance', 'aligned_BAM', 'gene-count matrix', 'reference annotation']) {
+  for (const query of ['r package', 'transcript abundance', 'aligned_BAM', 'gene-count matrix', 'reference annotation']) {
     assert.equal(filterPipelines(fixture, { query }).length, 1, query);
     assert.equal(filterPipelines(fixture, { query, category: 'Genomics' }).length, 0, query);
   }

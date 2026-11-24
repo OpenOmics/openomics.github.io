@@ -1,24 +1,10 @@
-import { useEffect, useId, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import RollingText from './RollingText.jsx';
+import NucleotideSeam from './NucleotideSeam.jsx';
 import SequenceStill from './SequenceStill.jsx';
 import { attachSequenceAnimation } from '../lib/sequence-animation.js';
 
-const BASES = 'ACGT';
-const SEAM_COLUMNS = 48;
-const SEAM_COLUMN_WIDTH = 12;
-const SEAM_ROW_HEIGHT = 16;
-const SEAM_GLYPHS = Array.from({ length: 8 * SEAM_COLUMNS }, (_, index) => {
-  const row = Math.floor(index / SEAM_COLUMNS);
-  const column = index % SEAM_COLUMNS;
-  const noise = Math.abs((Math.sin(column * 78.233 + row * 12.9898) * 43758.5453) % 1);
-  return noise > row * .115 ? {
-    key: index, x: column * SEAM_COLUMN_WIDTH, y: row * SEAM_ROW_HEIGHT + 13,
-    base: BASES[(column * 7 + row * 3) % 4],
-  } : null;
-}).filter(Boolean);
-
 export default function Hero({ pipelineHref = '/pipelines/' }) {
-  const seamPatternId = useId();
   const canvasRef = useRef(null);
   const controls = useRef(null);
   const [motion, setMotion] = useState({ mode: 'ready', available: false });
@@ -42,8 +28,8 @@ export default function Hero({ pipelineHref = '/pipelines/' }) {
               <span className="meta-right">Genomics · Multi-omics</span>
             </div>
             <h1 id="heroTitle">
-              <span>Complex biology.</span>
-              <span className="second">Made <em>legible.</em></span>
+              <span>Start decoding</span>
+              <span className="second"><em>Complex biology</em></span>
             </h1>
             <div className="hero-copy">
               <p>Open workflows for genomics<br className="hero-copy-break" /> and multi-omics research.</p>
@@ -56,16 +42,21 @@ export default function Hero({ pipelineHref = '/pipelines/' }) {
             </div>
           </div>
           <div className="hero-bottom">
-            <div className="hero-legend" aria-hidden="true">
-              <span>01 / Sequences</span><span className="legend-rule" /><span>02 / Alignment</span>
-            </div>
+            <div className="hero-legend" aria-hidden="true"></div>
             <div className="art-caption">
-              <span>Sequence alignment · illustrative</span>
               <span className="sr">Concentric rings of A, C, G, and T nucleotide sequences rotate independently, then slow to align their highlighted sequence markers along a common axis.</span>
               <button className="motion-button" id="motion" type="button"
                 aria-pressed={motion.mode !== 'playing'} hidden={!motion.available}
                 onClick={() => controls.current?.toggle()}>
-                <span aria-hidden="true">{motion.mode === 'playing' ? 'Ⅱ' : motion.mode === 'complete' ? '↻' : '▷'}</span>
+                <svg className="motion-icon" width="16" height="16" viewBox="0 0 24 24"
+                  fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                  aria-hidden="true" focusable="false">
+                  {motion.mode === 'playing' ? (
+                    <path d="M8 5v14M16 5v14" />
+                  ) : (
+                    <path d="m8 5 11 7-11 7Z" />
+                  )}
+                </svg>
                 {motionLabels[motion.mode] || 'Play animation'}
               </button>
             </div>
@@ -76,16 +67,7 @@ export default function Hero({ pipelineHref = '/pipelines/' }) {
           </div>
         </div>
       </section>
-      <div className="seam" id="seam" aria-hidden="true">
-        <svg className="seam-pattern" width="100%" height="100%" focusable="false">
-          <defs>
-            <pattern id={seamPatternId} width={SEAM_COLUMNS * SEAM_COLUMN_WIDTH} height={8 * SEAM_ROW_HEIGHT} patternUnits="userSpaceOnUse">
-              {SEAM_GLYPHS.map(({ key, x, y, base }) => <text key={key} x={x} y={y}>{base}</text>)}
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill={`url(#${seamPatternId})`} />
-        </svg>
-      </div>
+      <NucleotideSeam id="seam" />
     </>
   );
 }

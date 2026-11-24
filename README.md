@@ -34,7 +34,7 @@ The pipeline page works when opened directly, refreshed, or visited with JavaScr
 
 The footer year is captured once during the build and passed to the client, preventing hydration differences at year boundaries. The hero plays one eight-second ring alignment and then stops scheduling animation frames. Pause, resume, and replay controls are available. Reduced-motion visitors immediately see the completed artwork and may explicitly choose to play it. Offscreen and hidden-tab time does not advance the animation; listeners, observers, frames, and cached graphics are released on unmount.
 
-The animation uses Canvas 2D with cached character sprites, a bounded character field, fewer characters on mobile, a pixel-density cap of 1.5, and a drawing target of 30 frames per second. Twenty-one concentric nucleotide tracks rotate in alternating directions, at different rates, before easing to rest from the inside outward. Their highlighted ATGC motifs meet on one fixed registration axis. Radii and spacing stay constant; characters move with their track instead of independently. The headline, navigation, and controls remain HTML. Desktop and mobile SVG fallbacks use the same deterministic rings and settled character positions as the canvas. They are included in the server-rendered page and remain visible without JavaScript or if canvas initialization fails. Mobile uses nine rings in a dedicated composition below the headline and controls. The animation adds no third-party dependency, video download, or runtime network request. Frame rate still depends on the device and should be measured on representative phones before release.
+The animation uses Canvas 2D with cached character sprites, a bounded character field, fewer characters on mobile, a pixel-density cap of 1.5, and a drawing target of 30 frames per second. Twenty-one concentric nucleotide tracks rotate in alternating directions, at different rates, before easing to rest from the inside outward. Their highlighted ATG motifs meet on one fixed registration axis. Radii and spacing stay constant; characters move with their track instead of independently. The headline, navigation, and controls remain HTML. Desktop and mobile SVG fallbacks use the same deterministic rings and settled character positions as the canvas. They are included in the server-rendered page and remain visible without JavaScript or if canvas initialization fails. Mobile uses nine rings in a dedicated composition below the headline and controls. The animation adds no third-party dependency, video download, or runtime network request. Frame rate still depends on the device and should be measured on representative phones before release.
 
 ## Project structure
 
@@ -57,13 +57,16 @@ The animation uses Canvas 2D with cached character sprites, a bounded character 
 
 ## Content and catalog
 
-Edit `src/data/pipelines.json` to update the explorer. Its 28 repositories were preserved from the reviewed **3 February 2026** catalog snapshot. Categories and short descriptions are editorial; the page explicitly identifies that list's date and links to its source. The expanded descriptions were separately reviewed against project documentation on **18 November 2026**. Nothing in the interface claims to be a live GitHub count.
+Edit `src/data/pipelines.json` to update the explorer. The catalog currently contains **31 projects**, including pipelines, an R package, and command-line tools. It began with the **3 February 2026** catalog snapshot and was expanded on **24 November 2026** with CellSight, PDtoMSstats, microbe-count, tcr-seek, and snakevision. DLscID and iso-seek were removed from the current catalog before this expansion. Categories and short descriptions are editorial; PDtoMSstats appears under Proteomics, and cfChIP-seek and cyte-seek appear under Archived.
+
+The existing descriptions were reviewed on **18 November 2026**; the five additions were checked against their GitHub READMEs, usage guides, and relevant source files on **24 November 2026**. Each detail view retains its own review date and source links. Metadata preserves the original snapshot date and source, tracks the latest catalog update separately, and records the current count. The site does not fetch GitHub at runtime.
 
 For each entry maintain the exact repository name, canonical GitHub URL, short description, category array, and topic array. Its `details` object supplies the explorer's richer content:
 
 | Field | Content |
 | --- | --- |
-| `overview` | What the workflow does and the research task it supports |
+| `overview` | What the project does and the research task it supports |
+| `type` (optional) | Software form shown beside the categories, such as `R package`, `Analysis workflow`, `Pipeline`, or `Command-line tool` |
 | `inputs` | Documented input data and reference requirements |
 | `outputs` | Principal documented results, reports, or artifacts |
 | `notes` | Practical prerequisites and important documented limitations |
@@ -73,9 +76,9 @@ For each entry maintain the exact repository name, canonical GitHub URL, short d
 | `status` (optional) | Documented `archived`, `scaffold`, or `template` status; omit when not established |
 | `sources` (optional) | Labeled supporting documentation or workflow source links when the overview relies on multiple files |
 
-Search includes overviews, inputs, outputs, practical notes, and documented status labels. The expanded view keeps source and documentation links close to each description; run guidance is a native disclosure to keep the main facts easy to scan. Archived projects and development scaffolds are explicitly labeled. Where a repository does not document a detail, say so rather than infer a capability. A documentation review is not an execution benchmark or scientific validation.
+Search includes project types, overviews, inputs, outputs, practical notes, and documented status labels. The expanded view keeps source and documentation links close to each description; run guidance is a native disclosure to keep the main facts easy to scan. Archived projects and development scaffolds are explicitly labeled. Where a repository does not document a detail, say so rather than infer a capability. A documentation review is not an execution benchmark or scientific validation.
 
-Update per-workflow review dates when checking descriptions, and list snapshot metadata only when reviewing the catalog membership. Run `npm test` and inspect search/category behavior after edits. The production build never fetches GitHub or needs a token.
+Update each project’s review date when checking its description. When membership changes, update `metadata.count`, `updatedDate`, and `updatedDisplayDate`; retain the original snapshot provenance. Run `npm test` and inspect search/category behavior after edits. The production build never fetches GitHub or needs a token.
 
 When adding this project to the existing website repository, retain its `docs/`, Python catalog generator, and Zensical configuration for reference and content provenance. They are not needed by the React build and are not duplicated in this standalone package. The historical site instructions are included in `docs/legacy-site.md`.
 
@@ -97,7 +100,7 @@ To install in the existing repository, create a branch and copy this package's c
 
 The default deployment target is `https://openomics.github.io/`. Pull requests run checks and upload a review build. The deploy job runs only for `main`, after the build and browser checks pass. Set the repository's **Settings → Pages → Source** to **GitHub Actions** if it is not already configured that way.
 
-The old `/projects/` and `/projects.html` URLs redirect to `/pipelines/`. `/about/` and `/about.html` redirect to the homepage's approach section. A standalone `404.html`, `robots.txt`, sitemap covering both pages, page-specific metadata and canonical URLs, and SVG favicon are included.
+The old `/projects/` and `/projects.html` URLs redirect to `/pipelines/`. `/about/` and `/about.html` redirect to the homepage's approach section. A standalone `404.html`, `robots.txt`, sitemap covering both pages, page-specific metadata and canonical URLs, and a PNG logo used for the header and favicon are included.
 
 For a different host or a project subdirectory, set the public URL at build time:
 
